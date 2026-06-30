@@ -1,0 +1,41 @@
+// Problemas que entrarían en el workflow EDA-Problem-Integration
+// Replica exacta del filtro del trigger (davis-event, kind = DAVIS_PROBLEM)
+//
+// Nota: maintenanceWindowTriggerBehavior = "outside"
+//       → el workflow NO dispara si la entidad está en mantenimiento.
+//       Para ver qué problemas quedaron excluidos, cambia el filtro
+//       de maintenance.is_under_maintenance a == true.
+
+fetch events, from: now() - 24h
+| filter event.kind == "DAVIS_PROBLEM"
+  and event.status == "ACTIVE"
+  and event.status_transition == "CREATED"
+  and (event.category == "AVAILABILITY" or event.category == "ERROR" or event.category == "RESOURCE_CONTENTION")
+  and (maintenance.is_under_maintenance == false or maintenance.is_under_maintenance == null)
+| fields
+    timestamp,
+    event.id,
+    display_id,
+    event.name,
+    event.category,
+    event.severity,
+    event.status,
+    event.status_transition,
+    event.start,
+    event.end,
+    root_cause_entity_id,
+    root_cause_entity_name,
+    affected_entity_ids,
+    affected_entity_names,
+    affected_entity_types,
+    dt.entity.host,
+    dt.entity.host.name,
+    dt.host_group.id,
+    dt.entity.host_group.name,
+    dt.source_entity,
+    dt.source_entity.type,
+    dt.davis.impact_level,
+    dt.davis.timeout,
+    dt.davis.event_ids,
+    entity_tags
+| sort timestamp desc

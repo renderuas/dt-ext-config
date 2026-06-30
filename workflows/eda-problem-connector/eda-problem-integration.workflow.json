@@ -1,0 +1,118 @@
+{
+  "id": "993ab780-43a6-4a95-93b4-c4fd05e280f5",
+  "title": "EDA-Problem-Integration",
+  "description": "Workflow basado en problemas Davis para EDA",
+  "actor": "95d9f7f7-9617-4830-8d55-098e664a1bdc",
+  "owner": "95d9f7f7-9617-4830-8d55-098e664a1bdc",
+  "ownerType": "USER",
+  "isPrivate": true,
+  "schemaVersion": 4,
+  "trigger": {
+    "eventTrigger": {
+      "isActive": false,
+      "triggerConfiguration": {
+        "type": "davis-event",
+        "value": {
+          "entityTags": {},
+          "customFilter": "event.kind == \"DAVIS_PROBLEM\"\nand event.status == \"ACTIVE\"\nand event.status_transition == \"CREATED\"\nand (event.category == \"AVAILABILITY\"\nor event.category == \"ERROR\"\nor event.category == \"RESOURCE_CONTENTION\")\n//and (event.name == \"[AESM] [Filenet] custom.filenet.objectstoresp.docs_created_last_hour\"\n//or event.name == \"[AESM] [Filenet] custom.filenet.objectstoreca.docs_created_last_hour\")\n",
+          "onProblemClose": false,
+          "maintenanceWindowTriggerBehavior": "outside",
+          "entityTagsMatch": null
+        }
+      }
+    }
+  },
+  "result": null,
+  "type": "STANDARD",
+  "input": {},
+  "hourlyExecutionLimit": 1000,
+  "guide": null,
+  "tasks": {
+    "send_email_1": {
+      "name": "send_email_1",
+      "input": {
+        "cc": [],
+        "to": [
+          "victor.ruiz@axa.es"
+        ],
+        "bcc": [],
+        "content": "{% set e = result(\"run_javascript_1\") %}\n[DEBUG EDA-PoC] Problema Davis procesado\n=========================================\n\nProblem ID:        {{ e[\"event_id\"] }}\nDisplay ID:        {{ e[\"display_id\"] or \"-\" }}\nCorrelation ID:    {{ e[\"correlation_id\"] or \"-\" }}\n\nQUE PASO\n--------\nTitulo:            {{ e[\"event_name\"] }}\nDescripcion:       {{ e[\"event_description\"] or \"-\" }}\nCategoria:         {{ e[\"event_category\"] }}\nSeveridad:         {{ e[\"event_severity\"] or \"-\" }}\nEstado:            {{ e[\"event_status\"] or \"-\" }}\nTransicion:        {{ e[\"status_transition\"] or \"-\" }}\nInicio:            {{ e[\"event_start\"] or \"-\" }}\nFin:               {{ e[\"event_end\"] or \"-\" }}\nNivel de impacto:  {{ e[\"impact_level\"] or \"-\" }}\nTimeout (min):     {{ e[\"timeout_minutes\"] or \"-\" }}\nMute status:       {{ e[\"mute_status\"] or \"-\" }}\n\nDONDE PASO\n----------\nRoot cause entity: {{ e[\"root_cause_entity_name\"] or \"-\" }} ({{ e[\"root_cause_entity_id\"] or \"-\" }})\nEntidades afectadas: {{ e[\"affected_entity_names\"] | join(\", \") or \"-\" }}\nHost:              {{ e[\"host_name\"] or \"-\" }}\nHost ID:           {{ e[\"host_id\"] or \"-\" }}\nHost Group:        {{ e[\"host_group_name\"] or \"-\" }}\nSource entity:     {{ e[\"source_entity\"] or \"-\" }}\nSource type:       {{ e[\"source_entity_type\"] or \"-\" }}\n\nENRUTAMIENTO (entity_tags)\n--------------------------\nEnvironment:       {{ e[\"environment\"] or \"-\" }}\nOpCo:              {{ e[\"opco\"] or \"-\" }}\nAssignment group:  {{ e[\"assignment_group\"] or \"-\" }}\nPlatform:          {{ e[\"platform\"] or \"-\" }}\nApp:               {{ e[\"app\"] or \"-\" }}\nApp service ID:    {{ e[\"app_service_id\"] or \"-\" }}\nPatch env:         {{ e[\"patch_environment\"] or \"-\" }}\n\nTRAZABILIDAD\n------------\nEventos Davis subyacentes: {{ e[\"underlying_event_ids\"] | join(\", \") or \"-\" }}\n\nPAYLOAD COMPLETO (JSON enviado a EDA)\n--------------------------------------\n{{ e | tojson }}\n",
+        "subject": "PoC autoremediacion EDA - Problems"
+      },
+      "action": "dynatrace.email:send-email",
+      "position": {
+        "x": -1,
+        "y": 2
+      },
+      "conditions": {
+        "states": {
+          "run_javascript_1": "OK"
+        }
+      },
+      "description": "Send email",
+      "predecessors": [
+        "run_javascript_1"
+      ]
+    },
+    "run_javascript_1": {
+      "name": "run_javascript_1",
+      "input": {
+        "script": "import { executionsClient } from \"@dynatrace-sdk/client-automation\";\n\nexport default async function main({ execution_id }) {\n\n  // Obtener el contexto de ejecucion via SDK para acceder al problema del trigger\n  let execution;\n  try {\n    execution = await executionsClient.getExecution({ id: execution_id });\n  } catch (e) {\n    throw new Error(`[EDA-Problem-Integration] No se pudo obtener la ejecucion ${execution_id}: ${e.message}`);\n  }\n\n  const event = execution.params?.event;\n\n  // Validar campos requeridos antes de continuar\n  const requiredFields = [\"event.id\", \"event.name\", \"event.category\"];\n  const missing = requiredFields.filter(f => event?.[f] == null || event?.[f] === \"\");\n  if (!event || missing.length > 0) {\n    throw new Error(`[EDA-Problem-Integration] Campos requeridos ausentes en el problema: ${missing.join(\", \")}`);\n  }\n\n  // Extraer tag especifico del array entity_tags\n  const tags = event[\"entity_tags\"] || [];\n  const getTag = (prefix) => {\n    const p = prefix.toUpperCase();\n    const match = tags.find(t => t.toUpperCase().startsWith(p + \":\"));\n    return match ? match.split(\":\").slice(1).join(\":\") : null;\n  };\n\n  const toISO = (ts) => {\n    if (!ts) return null;\n    const ms = ts < 1e12 ? ts * 1000 : ts;\n    return new Date(ms).toISOString();\n  };\n\n  return {\n      // Identificacion del problema\n      event_id:             event[\"event.id\"],\n      display_id:           event[\"display_id\"] || null,\n      correlation_id:       event[\"dt.event.correlation_id\"] || null,\n\n      // Que paso\n      event_name:           event[\"event.name\"],\n      event_description:    event[\"event.description\"] || null,\n      event_category:       event[\"event.category\"],\n      event_severity:       event[\"event.severity\"] || null,\n      event_status:         event[\"event.status\"] || null,\n      status_transition:    event[\"event.status_transition\"] || null,\n      event_start:          toISO(event[\"event.start\"]),\n      event_end:            toISO(event[\"event.end\"]),\n\n      // Donde paso (entidad raiz / entidades afectadas del problema)\n      root_cause_entity_id:    event[\"root_cause_entity_id\"] || null,\n      root_cause_entity_name:  event[\"root_cause_entity_name\"] || null,\n      affected_entity_ids:     event[\"affected_entity_ids\"] || [],\n      affected_entity_names:   event[\"affected_entity_names\"] || [],\n      affected_entity_types:   event[\"affected_entity_types\"] || [],\n      host_id:              event[\"dt.entity.host\"] || null,\n      host_name:            event[\"dt.entity.host.name\"] || event[\"host.name\"] || null,\n      host_group_id:        event[\"dt.host_group.id\"] || null,\n      host_group_name:      event[\"dt.entity.host_group.name\"] || null,\n      source_entity_type:   event[\"dt.source_entity.type\"] || null,\n      source_entity:        event[\"dt.source_entity\"] || null,\n\n      // Enrutamiento y contexto operacional (extraido de entity_tags)\n      environment:          getTag(\"ENVIRONMENT\"),\n      opco:                 getTag(\"AGO_AXAOPCOTRIGRAM\"),\n      assignment_group:     getTag(\"AGO_DEFAULT_ASSIGNMENT_GROUP\"),\n      platform:             getTag(\"AGO_AXAPLATFORM\"),\n      app:                  getTag(\"AGO_GLOBAL_APP\"),\n      app_service_id:       getTag(\"AGO_GLOBAL_APPSERVICEID\"),\n      patch_environment:    getTag(\"AGO_AXAPATCHENVIRONMENT\"),\n\n      // Control de remediacion\n      timeout_minutes:      event[\"dt.davis.timeout\"] || null,\n      impact_level:         event[\"dt.davis.impact_level\"] || null,\n      mute_status:          event[\"dt.davis.mute.status\"] || null,\n\n      // Trazabilidad hacia Dynatrace (eventos Davis que componen el problema)\n      underlying_event_ids: event[\"dt.davis.event_ids\"] || []\n    };\n}",
+        "sdkMajorVersions": {
+          "@dynatrace-sdk/units": "1",
+          "@dynatrace-sdk/client-hub": "2",
+          "@dynatrace-sdk/client-iam": "1",
+          "@dynatrace-sdk/adhoc-utils": "1",
+          "@dynatrace-sdk/http-client": "1",
+          "@dynatrace-sdk/client-query": "1",
+          "@dynatrace-sdk/shared-errors": "1",
+          "@dynatrace-sdk/error-handlers": "1",
+          "@dynatrace-sdk/app-environment": "1",
+          "@dynatrace-sdk/client-document": "1",
+          "@dynatrace-sdk/automation-utils": "2",
+          "@dynatrace-sdk/user-preferences": "1",
+          "@dynatrace-sdk/client-automation": "8",
+          "@dynatrace-sdk/client-hub-catalog": "0",
+          "@dynatrace-sdk/shared-client-utils": "1",
+          "@dynatrace-sdk/client-resource-store": "1",
+          "@dynatrace-sdk/client-davis-analyzers": "1",
+          "@dynatrace-sdk/client-bucket-management": "3",
+          "@dynatrace-sdk/client-app-engine-registry": "3",
+          "@dynatrace-sdk/client-classic-environment-v1": "2",
+          "@dynatrace-sdk/client-classic-environment-v2": "6",
+          "@dynatrace-sdk/client-app-engine-edge-connect": "1",
+          "@dynatrace-sdk/client-filter-segment-management": "1",
+          "@dynatrace-sdk/client-platform-management-service": "1"
+        }
+      },
+      "action": "dynatrace.automations:run-javascript",
+      "position": {
+        "x": 0,
+        "y": 1
+      },
+      "description": "Run custom JavaScript code.",
+      "predecessors": []
+    },
+    "send_event_to_event-driven-ansible_1": {
+      "name": "send_event_to_event-driven-ansible_1",
+      "input": {
+        "eventData": "{{ result(\"run_javascript_1\") | tojson }}",
+        "connectionId": "vu9U3hXa3q0AAAABADNhcHA6ZHluYXRyYWNlLnJlZGhhdC5hbnNpYmxlOmVkYS13ZWJob29rLmNvbm5lY3Rpb24ABnRlbmFudAAGdGVuYW50ACQwNWYyODU3Yi1mMzkzLTM3NzgtOGQyZC1iMmRjMGFhMmEyZTK-71TeFdrerQ"
+      },
+      "action": "dynatrace.redhat.ansible:send-event-to-eda",
+      "position": {
+        "x": 0,
+        "y": 2
+      },
+      "conditions": {
+        "states": {
+          "run_javascript_1": "OK"
+        }
+      },
+      "description": "Send an event to the Red Hat Event-Driven-Ansible Controller via Event Source Plugin",
+      "predecessors": [
+        "run_javascript_1"
+      ]
+    }
+  }
+}
