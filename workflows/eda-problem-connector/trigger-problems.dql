@@ -1,8 +1,13 @@
-// Problemas que entrarían en el workflow EDA-Problem-Integration
-// Replica exacta del filtro del trigger (davis-event, kind = DAVIS_PROBLEM)
+// Problemas que entrarían (aproximadamente) al workflow EDA-Problem-Integration
 //
-// Nota: maintenanceWindowTriggerBehavior = "outside"
-//       → el workflow NO dispara si la entidad está en mantenimiento.
+// Nota: el trigger real es tipo "davis-problem" (Problem Trigger), que filtra
+// por categorías (availability/error/resource) via checkboxes en la UI, no con
+// event.category en texto. Esta DQL es solo una aproximacion equivalente para
+// explorar volumen/contenido de problemas con DQL ad-hoc - no es literalmente
+// la query que ejecuta el trigger.
+//
+// maintenanceWindowTriggerBehavior: pendiente de confirmar si "davis-problem"
+// tiene un control equivalente al de "davis-event" (outside) - ver README.
 //       Para ver qué problemas quedaron excluidos, cambia el filtro
 //       de maintenance.is_under_maintenance a == true.
 

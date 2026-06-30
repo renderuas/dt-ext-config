@@ -11,13 +11,22 @@
     "eventTrigger": {
       "isActive": false,
       "triggerConfiguration": {
-        "type": "davis-event",
+        "type": "davis-problem",
         "value": {
           "entityTags": {},
-          "customFilter": "event.kind == \"DAVIS_PROBLEM\"\nand event.status == \"ACTIVE\"\nand event.status_transition == \"CREATED\"\nand (event.category == \"AVAILABILITY\"\nor event.category == \"ERROR\"\nor event.category == \"RESOURCE_CONTENTION\")\n//and (event.name == \"[AESM] [Filenet] custom.filenet.objectstoresp.docs_created_last_hour\"\n//or event.name == \"[AESM] [Filenet] custom.filenet.objectstoreca.docs_created_last_hour\")\n",
+          "entityTagsMatch": null,
           "onProblemClose": false,
-          "maintenanceWindowTriggerBehavior": "outside",
-          "entityTagsMatch": null
+          "analysisReady": false,
+          "categories": {
+            "monitoringUnavailable": false,
+            "availability": true,
+            "error": true,
+            "slowdown": false,
+            "resource": true,
+            "custom": false,
+            "info": false
+          },
+          "customFilter": ""
         }
       }
     }

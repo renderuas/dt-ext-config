@@ -12,7 +12,7 @@ Es el equivalente a [`eda-event-connector`](../eda-event-connector/) pero a nive
 
 | | `eda-event-connector` | `eda-problem-connector` |
 |---|---|---|
-| Dispara con | `event.kind == "DAVIS_EVENT"` | `event.kind == "DAVIS_PROBLEM"` |
+| Dispara con | trigger `davis-event` + `customFilter` en texto | trigger `davis-problem` + `categories` (booleans) |
 | Granularidad | Evento individual (puede no llegar a generar un problema) | Problema correlacionado por Davis (agrupa uno o más eventos) |
 | Entidad principal | Entidad fuente del evento (`dt.source_entity`) | Entidad raíz (`root_cause_entity_id`) + entidades afectadas |
 | Trazabilidad | `problem_ids`: problemas asociados al evento | `underlying_event_ids`: eventos Davis que componen el problema |
@@ -24,10 +24,9 @@ Ambos workflows pueden coexistir sin duplicar remediaciones si EDA deduplica por
 ## Arquitectura del flujo
 
 ```
-Davis Event Trigger
+Problem Trigger (categorías: Availability, Error, Resource)
        │
-       │  DAVIS_PROBLEM + ACTIVE + CREATED + categoría en (AVAILABILITY, ERROR, RESOURCE_CONTENTION)
-       │  (solo fuera de ventanas de mantenimiento)
+       │  dispara al abrir/reabrir el problema
        ▼
 run_javascript_1  ──► ERROR ──► falla con mensaje descriptivo
   · Obtiene el problema via SDK (executionsClient)
@@ -47,22 +46,15 @@ run_javascript_1  ──► ERROR ──► falla con mensaje descriptivo
 
 ## Trigger
 
-- **Tipo:** `davis-event` (mismo tipo de trigger que el conector de eventos; en Dynatrace tanto eventos como problemas Davis se configuran a través del trigger "Davis event", filtrando por `event.kind`) — actualmente **inactivo** (`isActive: false`)
-- **Filtro activo:**
+- **Tipo:** `davis-problem` ("Problem Trigger" en la UI) — **distinto** del `davis-event` que usa `eda-event-connector`. No es el mismo trigger con un filtro distinto: es un tipo de trigger separado en el schema de Dynatrace (`triggerConfiguration.type`), confirmado contra el código fuente del [Terraform provider de Dynatrace](https://pkg.go.dev/github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows/settings) — actualmente **inactivo** (`isActive: false`)
 
-```
-event.kind == "DAVIS_PROBLEM"
-and event.status == "ACTIVE"
-and event.status_transition == "CREATED"
-and (event.category == "AVAILABILITY"
-or event.category == "ERROR"
-or event.category == "RESOURCE_CONTENTION")
-```
+> ⚠️ **Corrección importante (2026-06-30):** la primera versión de este workflow usaba `type: "davis-event"` con un `customFilter` escribiendo `event.kind == "DAVIS_PROBLEM"` a mano (copiado de `eda-event-connector`). Al importarlo y probar "Query past events" en la UI dio **0 resultados en 1h/1d/7d**, pese a que la misma lógica de filtro vía DQL ad-hoc sí devolvía 5 problemas reales. Causa: con `type: "davis-event"`, el trigger evalúa contra la fuente de eventos Davis (`DAVIS_EVENT`), no problemas — el `customFilter` pidiendo `DAVIS_PROBLEM` nunca podía matchear nada, sin importar el rango de tiempo. **Corregido a `type: "davis-problem"`**, que usa un objeto `categories` (booleans) en vez de filtrar `event.category` por texto, y dispara automáticamente al abrir/reabrir el problema sin necesitar `event.status_transition == "CREATED"` en el filtro.
 
-- Solo se dispara en creación del problema (`CREATED`), no en actualizaciones (`UPDATED`/`REFRESHED`) ni en cierre (`CLOSED`/`RESOLVED`)
-- **Filtro de severidad/categoría:** se restringe a `AVAILABILITY`, `ERROR` y `RESOURCE_CONTENTION` (las categorías de mayor impacto operativo). Se excluyen deliberadamente `CUSTOM_ALERT` (ya cubierta por `eda-event-connector` a nivel de evento), `MONITORING_UNAVAILABLE` y `SLOWDOWN`/`PERFORMANCE`. **Ajustar esta lista según el volumen y criticidad real observados en staging.**
-- **No actúa dentro de ventanas de mantenimiento** (`maintenanceWindowTriggerBehavior: outside`) — si la entidad está en mantenimiento, el problema no se procesa y **no se envía nada a EDA**
-- Hay un filtro de Filenet comentado en el JSON (`event.name`), heredado como plantilla del conector de eventos; se puede descomentar para restringir el scope
+- **Categorías activas:** `availability: true`, `error: true`, `resource: true` (resto en `false`) — equivalente a `AVAILABILITY`, `ERROR`, `RESOURCE_CONTENTION`. Se excluyen deliberadamente `custom` (`CUSTOM_ALERT`, ya cubierta por `eda-event-connector` a nivel de evento), `monitoringUnavailable`, `slowdown` e `info`. **Ajustar según el volumen y criticidad real observados en staging.**
+- **`onProblemClose: false`** — no dispara al cerrarse el problema (igual que el conector de eventos)
+- **`analysisReady: false`** — el workflow dispara apenas se abre el problema, sin esperar a que termine el análisis de causa raíz de Davis. Si se quiere esperar a tener `root_cause_entity_id` resuelto (que en la muestra real siempre vino vacío — ver más abajo), probar `analysisReady: true` y validar si eso lo rellena.
+- **`customFilter`** queda vacío por ahora; el campo sigue disponible en `davis-problem` por si se necesita refinar más allá de las categorías (ej. el filtro de Filenet comentado en `eda-event-connector`).
+- ⚠️ **Pendiente de confirmar en la UI:** el struct de `davis-problem` documentado en el Terraform provider no lista un campo `maintenanceWindowTriggerBehavior` (sí existe en `davis-event`). Falta confirmar en la pantalla "Problem Trigger" del tenant si hay un control equivalente para "no disparar durante mantenimiento" y, si lo hay, qué nombre de campo usa en el JSON — **no asumir que el comportamiento `outside` de `eda-event-connector` se heredó automáticamente.**
 
 > ✅ **Validado contra datos reales (2026-06-30):** el mapeo se contrastó contra 5 problemas reales del tenant ([`ProblemsExample.JSON`](ProblemsExample.JSON), capturados con `trigger-problems.dql` vía DQL). Hallazgos que corrigieron el mapeo inicial:
 >
@@ -172,22 +164,26 @@ Igual patrón que en `eda-event-connector`: envía el payload normalizado comple
 
 ## Configuración antes de activar
 
-1. **Resolver el gap de tags `AGO_*` en problemas de tipo servicio** (ver hallazgo crítico arriba) — confirmar con el equipo de tagging si es esperado o un bug de configuración en PRE, antes de depender de `opco`/`assignment_group`/`app_service_id`/`patch_environment` para enrutar remediaciones de servicios (JBoss, httpd, etc.)
-2. **Capturar al menos un problema real de categoría disco/recurso** para validar el caso de uso de limpieza de disco (la muestra de 5 no incluyó ninguno)
-3. **Verificar `connectionId`:** debe apuntar a la conexión EDA activa del tenant
-4. **Decidir el destino de `send_email_1`** antes de producción (ver nota arriba)
-5. **Ajustar el filtro de categoría/severidad** (`event.category in (...)`) según el volumen real observado con `trigger-problems.dql`
-6. **Revisar `hourlyExecutionLimit`** (actual: 1000)
-7. **Evaluar solapamiento con `eda-event-connector`:** si ambos workflows están activos, un mismo incidente puede generar tanto un evento como un problema; coordinar con EDA para deduplicar por `correlation_id`/`display_id` y evitar remediaciones duplicadas. La muestra real mostró dos problemas `Memory saturation` sobre el mismo host en menos de una hora — considerar cooldown/deduplicación también dentro de un mismo tipo de problema
-8. **Activar el trigger:** cambiar `isActive` a `true` en el JSON o desde la UI de Dynatrace
+1. **Confirmar en la UI si "Problem Trigger" tiene un control de comportamiento durante mantenimiento** equivalente al `maintenanceWindowTriggerBehavior: outside` de `eda-event-connector`, y si lo hay, sincronizar el nombre de campo en el JSON del repo (ver nota arriba) — **sin esto, el workflow podría disparar durante ventanas de mantenimiento**
+2. **Resolver el gap de tags `AGO_*` en problemas de tipo servicio** (ver hallazgo crítico arriba) — confirmar con el equipo de tagging si es esperado o un bug de configuración en PRE, antes de depender de `opco`/`assignment_group`/`app_service_id`/`patch_environment` para enrutar remediaciones de servicios (JBoss, httpd, etc.)
+3. **Capturar al menos un problema real de categoría disco/recurso** para validar el caso de uso de limpieza de disco (la muestra de 5 no incluyó ninguno)
+4. **Verificar `connectionId`:** debe apuntar a la conexión EDA activa del tenant
+5. **Decidir el destino de `send_email_1`** antes de producción (ver nota arriba)
+6. **Ajustar las `categories` activas** según el volumen real observado con "Query past events" en la UI o con `trigger-problems.dql`
+7. **Revisar `hourlyExecutionLimit`** (actual: 1000)
+8. **Evaluar solapamiento con `eda-event-connector`:** si ambos workflows están activos, un mismo incidente puede generar tanto un evento como un problema; coordinar con EDA para deduplicar por `correlation_id`/`display_id` y evitar remediaciones duplicadas. La muestra real mostró dos problemas `Memory saturation` sobre el mismo host en menos de una hora — considerar cooldown/deduplicación también dentro de un mismo tipo de problema
+9. **Activar el trigger:** cambiar `isActive` a `true` en el JSON o desde la UI de Dynatrace
 
 ---
 
 ## Pendientes / próximos pasos
 
 - [x] Capturar y validar un payload real de problema Davis (`event.kind == "DAVIS_PROBLEM"`) — hecho el 2026-06-30 con 5 problemas reales (`ProblemsExample.JSON`); ver correcciones aplicadas al mapeo arriba
+- [x] **Corregir el tipo de trigger de `davis-event` a `davis-problem`** — hecho el 2026-06-30 tras detectar que "Query past events" daba 0 resultados pese a que la DQL equivalente sí encontraba problemas reales; causa raíz confirmada contra el código fuente del Terraform provider de Dynatrace (ver nota en sección Trigger)
+- [ ] **Confirmar si `davis-problem` tiene equivalente a `maintenanceWindowTriggerBehavior`** y añadirlo al JSON si existe
 - [ ] **Investigar por qué los problemas de tipo servicio (JBoss) no traen tags `AGO_*` de enrutamiento** — bloqueante para el caso de uso de reinicio de JBoss/httpd si EDA depende de `assignment_group`
 - [ ] Capturar un problema real de categoría disco para validar ese caso de uso
+- [ ] Evaluar `analysisReady: true` para ver si espera a que Davis resuelva `root_cause_entity_id` (en la muestra siempre vino vacío con la config actual)
 - [ ] Definir estrategia de deduplicación con `eda-event-connector` en el lado de EDA
 - [ ] Decidir si activar `onProblemClose: true` para notificar a EDA cuando el problema se resuelve y cancelar remediaciones en curso
 - [ ] Decidir el destino final de `send_email_1` (eliminar / convertir en alerta de error / redirigir a lista de distribución)
