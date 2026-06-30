@@ -1,0 +1,5 @@
+{
+    "trigger": {
+        "eventTrigger": "Error occurred when validating Event Trigger. Reason: Caught exception when parsing DQL query 'event.kind == \"DAVIS_PROBLEM\" AND event.status == \"ACTIVE\" AND matchesValue(event.status_transition, {\"CREATED\", \"UPDATED\", \"REOPENED\"}) AND event.severity <= 3 AND (matchesValue(event.category, {\"AVAILABILITY\", \"ERROR\", \"RESOURCE_CONTENTION\"})) AND (isFalseOrNull(maintenance.is_under_maintenance)\n)'"
+    }
+}
