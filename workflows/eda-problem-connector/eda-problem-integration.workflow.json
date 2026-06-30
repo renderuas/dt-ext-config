@@ -26,7 +26,7 @@
             "custom": false,
             "info": false
           },
-          "customFilter": "isFalseOrNull(maintenance.is_under_maintenance)\n"
+          "customFilter": "(maintenance.is_under_maintenance == false\nor isNull(maintenance.is_under_maintenance))\n"
         }
       }
     }

@@ -7,11 +7,15 @@
 // la query que ejecuta el trigger.
 //
 // maintenanceWindowTriggerBehavior: "davis-problem" no tiene ese control en la UI
-// (a diferencia de "davis-event"). Se resuelve via customFilter con isFalseOrNull(),
-// ver README. Usamos isFalseOrNull() y no "== null" porque en DQL la comparacion
-// de igualdad con null es logica de tres estados (true/false/null) y "campo == null"
-// nunca evalua a true - hay que usar las funciones isNull()/isNotNull()/
-// isFalseOrNull()/isTrueOrNull() para chequeos de nulidad.
+// (a diferencia de "davis-event"). Se resuelve en el customFilter del trigger -
+// ver README. Aqui usamos isFalseOrNull() porque este archivo es DQL completo
+// (pipeline fetch|filter), donde esa funcion si existe. OJO: el customFilter
+// del trigger en el JSON del workflow NO acepta DQL completo, acepta el
+// lenguaje "matcher" mas restringido (el mismo de OpenPipeline/Log processing),
+// que no tiene isFalseOrNull()/isTrueOrNull() - ahi se usa la forma equivalente
+// "maintenance.is_under_maintenance == false or isNull(maintenance.is_under_maintenance)".
+// "campo == null" nunca evalua a true (logica de tres estados) - usar siempre
+// isNull()/isNotNull() (matcher y DQL) o isFalseOrNull()/isTrueOrNull() (solo DQL).
 //       Para ver qué problemas quedaron excluidos, invierte la condicion:
 //       maintenance.is_under_maintenance == true
 
