@@ -1,0 +1,1449 @@
+{
+  "records": [
+    {
+      "timestamp": "2026-06-30T16:38:37.977000000+02:00",
+      "event.id": "-3108870007598370612_1782830010244V2",
+      "display_id": "P-260614052",
+      "event.name": "Memory saturation",
+      "event.category": "RESOURCE_CONTENTION",
+      "event.severity": "3",
+      "event.status": "ACTIVE",
+      "event.status_transition": "CREATED",
+      "event.start": "2026-06-30T16:33:30.244000000+02:00",
+      "event.end": null,
+      "root_cause_entity_id": null,
+      "root_cause_entity_name": null,
+      "affected_entity_ids": [
+        "HOST-DBFCE1C94972C332"
+      ],
+      "affected_entity_names": [
+        "DAMA002D.PPPRIVMGMT.intraxa"
+      ],
+      "affected_entity_types": [
+        "dt.entity.host"
+      ],
+      "dt.entity.host": [
+        "HOST-DBFCE1C94972C332"
+      ],
+      "dt.entity.host.name": null,
+      "dt.host_group.id": [
+        "DEV_FTP_PAPYRUS_PAPYRUS"
+      ],
+      "dt.entity.host_group.name": null,
+      "dt.source_entity": null,
+      "dt.source_entity.type": null,
+      "dt.davis.impact_level": [
+        "Infrastructure"
+      ],
+      "dt.davis.timeout": null,
+      "dt.davis.event_ids": [
+        "-3108870007598370612_1782830010244"
+      ],
+      "entity_tags": [
+        "AESM_GLOBAL_APP:papyrus-spain",
+        "AESM_GLOBAL_ENVIRONMENT:integration",
+        "AESM_GLOBAL_RECOVERY_CLASS:bronze",
+        "AESM_vmstartstop:true",
+        "AESM_vmstarttime:07\\:00",
+        "AESM_vmstoptime:01\\:00",
+        "AESM_vmstopweekend:true",
+        "AGO_ALERTING_ACC",
+        "AGO_AXAATSLEGALENTITY:AXA-SEGUROS-SPAIN",
+        "AGO_AXAENVIRONMENTNAME:Integration",
+        "AGO_AXAGOSCOPE:True",
+        "AGO_AXAOPCOTRIGRAM:AES",
+        "AGO_AXAPATCHENVIRONMENT:ACCEPTANCE",
+        "AGO_AXAPLATFORM:AZURE_IAAS",
+        "AGO_AXAROLE:BASE",
+        "AGO_CSP_REGION:WESTEUROPE",
+        "AGO_DEFAULT_ASSIGNMENT_GROUP:DIS-SERV_L2_ITSP",
+        "AGO_GLOBAL_APP:Papyrus-Spain",
+        "AGO_GLOBAL_APPSERVICEID:390987f2db3087c43fd0f9231d9619e2",
+        "AGO_Not_AD:True",
+        "AGO_OS:Windows",
+        "AGO_Ora_backup:basic",
+        "APP:PAPYRUS",
+        "Arquitectura x86",
+        "AutoUpdateOneAgent:nopro",
+        "ENVIRONMENT:DEV",
+        "HostGroup:DEV_FTP_PAPYRUS_PAPYRUS",
+        "TECHNOLOGY:PAPYRUS",
+        "TIER:FTP",
+        "Windows",
+        "[Azure]Last Backup:06/29/2026, 10\\:23\\:45 PM",
+        "[Azure]global-app:Papyrus Spain",
+        "[Azure]global-appserviceid:390987f2db3087c43fd0f9231d9619e2",
+        "[Azure]global-cbp:A02119",
+        "[Azure]global-dataclass:Confidential",
+        "[Azure]global-dcs:AXA Seguros Spain",
+        "[Azure]global-env:Development",
+        "[Azure]global-opco:aes",
+        "[Azure]global-project:Public IaaS",
+        "[Azure]global-techserviceid:c19d9c3a1bec8994e3e66574604bcbee",
+        "[Azure]local-configuration:{\"license\"\\:\"Windows_Server\",\"os\"\\:\"Windows\",\"role\"\\:\"base\",\"support_resource_group\"\\:\"z-aes-support-dv01-ew1-01\",\"zones\"\\:\"2\\:1\"}",
+        "[Azure]local-configuration_backup:{\"policy\"\\:\"basic\",\"replicationtype\"\\:\"zonal\"}",
+        "[Azure]local-configuration_disks:{\"data_disks\"\\:2,\"data_disksize\"\\:300,\"os_disk_name\"\\:\"OSDisk\"}",
+        "[Azure]local-configuration_network:{\"exposure\"\\:\"internal\",\"source_address\"\\:\"100.113.139.15\",\"subnet\"\\:\"devs-int-pic-rt\",\"vnet\"\\:\"zaesintspkdv01ew1net01\"}",
+        "[Azure]local-configuration_recovery:{\"class\"\\:\"Bronze\",\"source_location\"\\:\"westeurope\"}",
+        "[Azure]local-deployment:{\"flow_type\"\\:\"Standard\",\"moduleversion\"\\:\"5.0.3\",\"source\"\\:\"Rehosted\",\"usage\"\\:\"Apps\"}",
+        "[Azure]local-purpose:MPI",
+        "[Azure]local-silva_internal_id:035433",
+        "[Azure]local-vmfqdn:dama002d.ppprivmgmt.intraxa",
+        "[Azure]local-vmprovisioning:activity-orchreport-succeeded-iteration1",
+        "[Azure]local-vmprovisioningid:20230921-085624",
+        "[Azure]local-vmpuppetstatus:NotApplicable",
+        "[Azure]local-vmstartstop:true",
+        "[Azure]local-vmstartstoppriority:2",
+        "[Azure]local-vmstarttime:07\\:00",
+        "[Azure]local-vmstatus:Provisioned",
+        "[Azure]local-vmstoptime:01\\:00",
+        "[Azure]local-vmstopweekend:true",
+        "aes_monitoring_enabled:non-prod",
+        "host:dama002d"
+      ]
+    },
+    {
+      "timestamp": "2026-06-30T16:13:27.045000000+02:00",
+      "event.id": "7828919690330717598_1782828790780V2",
+      "display_id": "P-260614049",
+      "event.name": "Minimum process count not met for rule AGO - Linux - Rsyslog",
+      "event.category": "AVAILABILITY",
+      "event.severity": "3",
+      "event.status": "ACTIVE",
+      "event.status_transition": "CREATED",
+      "event.start": "2026-06-30T16:13:10.780000000+02:00",
+      "event.end": null,
+      "root_cause_entity_id": null,
+      "root_cause_entity_name": null,
+      "affected_entity_ids": [
+        "HOST-0D84F7BEA830EF10"
+      ],
+      "affected_entity_names": [
+        "dama2019.ppcloudmgmt.intraxa"
+      ],
+      "affected_entity_types": [
+        "dt.entity.host"
+      ],
+      "dt.entity.host": [
+        "HOST-0D84F7BEA830EF10"
+      ],
+      "dt.entity.host.name": null,
+      "dt.host_group.id": [
+        "INT_DB_POSTGRE_ATRIA"
+      ],
+      "dt.entity.host_group.name": null,
+      "dt.source_entity": null,
+      "dt.source_entity.type": null,
+      "dt.davis.impact_level": [
+        "Infrastructure"
+      ],
+      "dt.davis.timeout": null,
+      "dt.davis.event_ids": [
+        "7828919690330717598_1782828790780"
+      ],
+      "entity_tags": [
+        "AESM_GLOBAL_APP:Atria",
+        "AESM_GLOBAL_APP:atria",
+        "AESM_GLOBAL_ENVIRONMENT:Development",
+        "AESM_GLOBAL_ENVIRONMENT:development",
+        "AESM_GLOBAL_RECOVERY_CLASS:bronze",
+        "AGO_ALERTING_ACC",
+        "AGO_AXAATSLEGALENTITY:AXA-TECH-SPAIN",
+        "AGO_AXAENVIRONMENTNAME:Development",
+        "AGO_AXAGOSCOPE:True",
+        "AGO_AXAOPCOTRIGRAM:AES",
+        "AGO_AXAPATCHENVIRONMENT:ACCEPTANCE",
+        "AGO_AXAPLATFORM:AZURE_IAAS",
+        "AGO_AXAROLE:BASE",
+        "AGO_CSP_REGION:WESTEUROPE",
+        "AGO_DEFAULT_ASSIGNMENT_GROUP:DIS-SERV_L2_ITSP",
+        "AGO_GLOBAL_APP:Atria",
+        "AGO_GLOBAL_APPSERVICEID:46c8f57fdb162b00cbdcf3d61d96198d",
+        "AGO_OS:Linux",
+        "AGO_Ora_backup:basic",
+        "APP:ATRIA",
+        "Arquitectura x86",
+        "AutoUpdateOneAgent:nopro",
+        "ENVIRONMENT:DEV",
+        "ENVIRONMENT:INT",
+        "HostGroup:INT_DB_POSTGRE_ATRIA",
+        "Linux",
+        "TECHNOLOGY:POSTGRE",
+        "TIER:DB",
+        "[Azure]Last Backup:06/29/2026, 09\\:28\\:42 PM",
+        "[Azure]global-app:Atria",
+        "[Azure]global-appserviceid:46c8f57fdb162b00cbdcf3d61d96198d",
+        "[Azure]global-cbp:A02132",
+        "[Azure]global-dataclass:Confidential",
+        "[Azure]global-dcs:AXA Seguros Spain",
+        "[Azure]global-env:Development",
+        "[Azure]global-opco:aes",
+        "[Azure]global-project:Public IAAS",
+        "[Azure]global-techserviceid:c19d9c3a1bec8994e3e66574604bcbee",
+        "[Azure]local-configuration:{\"license\"\\:\"RHEL_BYOS\",\"os\"\\:\"Linux\",\"role\"\\:\"base\",\"support_resource_group\"\\:\"z-aes-support-dv01-ew1-01\",\"zones\"\\:\"2\\:1\"}",
+        "[Azure]local-configuration_backup:{\"policy\"\\:\"basic\",\"replicationtype\"\\:\"zonal\"}",
+        "[Azure]local-configuration_disks:{\"data_disks\"\\:4,\"data_disksize\"\\:256,\"os_disk_name\"\\:\"osdisk\"}",
+        "[Azure]local-configuration_network:{\"exposure\"\\:\"external\",\"source_address\"\\:\"100.113.138.13\",\"subnet\"\\:\"devs-ext-pic-rt\",\"vnet\"\\:\"zaesextspkdv01ew1net01\"}",
+        "[Azure]local-configuration_recovery:{\"class\"\\:\"Bronze\",\"source_location\"\\:\"westeurope\"}",
+        "[Azure]local-dbclass:PostgreSQL Instance",
+        "[Azure]local-deployment:{\"flow_type\"\\:\"Standard\",\"moduleversion\"\\:\"5.0.3\",\"source\"\\:\"Rehosted\",\"usage\"\\:\"Apps\"}",
+        "[Azure]local-purpose:MPI",
+        "[Azure]local-silva_internal_id:NotReady",
+        "[Azure]local-vmfqdn:DAMA2019.ppcloudmgmt.intraxa",
+        "[Azure]local-vmprovisioning:rehosting-activity1-orchapi-succeeded-iteration1",
+        "[Azure]local-vmprovisioningid:20230317-110907",
+        "[Azure]local-vmpuppetstatus:NotReady",
+        "[Azure]local-vmstatus:Ready",
+        "aes_monitoring_enabled:non-prod",
+        "host:dama2019"
+      ]
+    },
+    {
+      "timestamp": "2026-06-30T15:51:58.220000000+02:00",
+      "event.id": "-6998144460772475768_1782826320000V2",
+      "display_id": "P-260614046",
+      "event.name": "Failure rate increase",
+      "event.category": "ERROR",
+      "event.severity": "3",
+      "event.status": "ACTIVE",
+      "event.status_transition": "CREATED",
+      "event.start": "2026-06-30T15:37:00.000000000+02:00",
+      "event.end": null,
+      "root_cause_entity_id": null,
+      "root_cause_entity_name": null,
+      "affected_entity_ids": [
+        "SERVICE-4F96D09699ED3B4F"
+      ],
+      "affected_entity_names": [
+        "BAMA9043.prcloudmgmt.intraxa:80"
+      ],
+      "affected_entity_types": [
+        "dt.entity.service"
+      ],
+      "dt.entity.host": null,
+      "dt.entity.host.name": null,
+      "dt.host_group.id": [
+        "PRE_ONLINE_JBOSS_ATRIA"
+      ],
+      "dt.entity.host_group.name": null,
+      "dt.source_entity": null,
+      "dt.source_entity.type": null,
+      "dt.davis.impact_level": [
+        "Services"
+      ],
+      "dt.davis.timeout": null,
+      "dt.davis.event_ids": [
+        "-6998144460772475768_1782826320000"
+      ],
+      "entity_tags": [
+        "AESM_GLOBAL_APP:Atria",
+        "AESM_GLOBAL_ENVIRONMENT:Pre-Production",
+        "AESM_vmstartstop:true",
+        "AESM_vmstarttime:07\\:00",
+        "AESM_vmstoptime:23\\:00",
+        "AESM_vmstopweekend:true",
+        "APP:ATRIA",
+        "ENVIRONMENT:PRE",
+        "TECHNOLOGY:JBOSS",
+        "TIER:ONLINE",
+        "aes_monitoring_enabled:non-prod",
+        "azure.location:westeurope",
+        "azure.resource.group:Z-AES-ATRIA-PP01-EW1-01",
+        "azure.subscription:0794959b-a80f-4de4-a327-7567945d0d57",
+        "dt.host_group.id:PRE_ONLINE_JBOSS_ATRIA",
+        "host:bama9043"
+      ]
+    },
+    {
+      "timestamp": "2026-06-30T15:47:55.009000000+02:00",
+      "event.id": "-4597493998789810313_1782826080000V2",
+      "display_id": "P-260614045",
+      "event.name": "Failure rate increase",
+      "event.category": "ERROR",
+      "event.severity": "3",
+      "event.status": "ACTIVE",
+      "event.status_transition": "CREATED",
+      "event.start": "2026-06-30T15:33:00.000000000+02:00",
+      "event.end": null,
+      "root_cause_entity_id": null,
+      "root_cause_entity_name": null,
+      "affected_entity_ids": [
+        "SERVICE-C2B6440BE4010373"
+      ],
+      "affected_entity_names": [
+        "axaes.apigw.polServices.svc.pub"
+      ],
+      "affected_entity_types": [
+        "dt.entity.service"
+      ],
+      "dt.entity.host": null,
+      "dt.entity.host.name": null,
+      "dt.host_group.id": [
+        "PRE_APIGW_WEBMETHODS_ESB"
+      ],
+      "dt.entity.host_group.name": null,
+      "dt.source_entity": null,
+      "dt.source_entity.type": null,
+      "dt.davis.impact_level": [
+        "Services"
+      ],
+      "dt.davis.timeout": null,
+      "dt.davis.event_ids": [
+        "-4597493998789810313_1782826080000",
+        "-641507137728053076_1782826080000"
+      ],
+      "entity_tags": [
+        "AESM_GLOBAL_APP:ESB-Spain",
+        "AESM_GLOBAL_ENVIRONMENT:Pre-Production",
+        "AESM_vmstartstop:true",
+        "AESM_vmstarttime:07\\:00",
+        "AESM_vmstoptime:01\\:00",
+        "AESM_vmstoptime:23\\:00",
+        "AESM_vmstopweekend:true",
+        "APP:ESB",
+        "ENVIRONMENT:PRE",
+        "TECHNOLOGY:WEBMETHODS",
+        "TIER:APIGW",
+        "Vulnerability test:apps-set-java",
+        "aes_monitoring_enabled:non-prod",
+        "azure.location:westeurope",
+        "azure.resource.group:Z-AES-ESB-PP01-EW1-01",
+        "azure.resource.group:z-aes-esb-pp01-ew1-01",
+        "azure.subscription:0794959b-a80f-4de4-a327-7567945d0d57",
+        "dt.host_group.id:PRE_APIGW_WEBMETHODS_ESB",
+        "host:bama2023, bama2025"
+      ]
+    },
+    {
+      "timestamp": "2026-06-30T15:43:36.830000000+02:00",
+      "event.id": "-3998413776914877253_1782826710099V2",
+      "display_id": "P-260614044",
+      "event.name": "Memory saturation",
+      "event.category": "RESOURCE_CONTENTION",
+      "event.severity": "3",
+      "event.status": "ACTIVE",
+      "event.status_transition": "CREATED",
+      "event.start": "2026-06-30T15:38:30.099000000+02:00",
+      "event.end": null,
+      "root_cause_entity_id": null,
+      "root_cause_entity_name": null,
+      "affected_entity_ids": [
+        "HOST-DBFCE1C94972C332"
+      ],
+      "affected_entity_names": [
+        "DAMA002D.PPPRIVMGMT.intraxa"
+      ],
+      "affected_entity_types": [
+        "dt.entity.host"
+      ],
+      "dt.entity.host": [
+        "HOST-DBFCE1C94972C332"
+      ],
+      "dt.entity.host.name": null,
+      "dt.host_group.id": [
+        "DEV_FTP_PAPYRUS_PAPYRUS"
+      ],
+      "dt.entity.host_group.name": null,
+      "dt.source_entity": null,
+      "dt.source_entity.type": null,
+      "dt.davis.impact_level": [
+        "Infrastructure"
+      ],
+      "dt.davis.timeout": null,
+      "dt.davis.event_ids": [
+        "-3998413776914877253_1782826710099"
+      ],
+      "entity_tags": [
+        "AESM_GLOBAL_APP:papyrus-spain",
+        "AESM_GLOBAL_ENVIRONMENT:integration",
+        "AESM_GLOBAL_RECOVERY_CLASS:bronze",
+        "AESM_vmstartstop:true",
+        "AESM_vmstarttime:07\\:00",
+        "AESM_vmstoptime:01\\:00",
+        "AESM_vmstopweekend:true",
+        "AGO_ALERTING_ACC",
+        "AGO_AXAATSLEGALENTITY:AXA-SEGUROS-SPAIN",
+        "AGO_AXAENVIRONMENTNAME:Integration",
+        "AGO_AXAGOSCOPE:True",
+        "AGO_AXAOPCOTRIGRAM:AES",
+        "AGO_AXAPATCHENVIRONMENT:ACCEPTANCE",
+        "AGO_AXAPLATFORM:AZURE_IAAS",
+        "AGO_AXAROLE:BASE",
+        "AGO_CSP_REGION:WESTEUROPE",
+        "AGO_DEFAULT_ASSIGNMENT_GROUP:DIS-SERV_L2_ITSP",
+        "AGO_GLOBAL_APP:Papyrus-Spain",
+        "AGO_GLOBAL_APPSERVICEID:390987f2db3087c43fd0f9231d9619e2",
+        "AGO_Not_AD:True",
+        "AGO_OS:Windows",
+        "AGO_Ora_backup:basic",
+        "APP:PAPYRUS",
+        "Arquitectura x86",
+        "AutoUpdateOneAgent:nopro",
+        "ENVIRONMENT:DEV",
+        "HostGroup:DEV_FTP_PAPYRUS_PAPYRUS",
+        "TECHNOLOGY:PAPYRUS",
+        "TIER:FTP",
+        "Windows",
+        "[Azure]Last Backup:06/29/2026, 10\\:23\\:45 PM",
+        "[Azure]global-app:Papyrus Spain",
+        "[Azure]global-appserviceid:390987f2db3087c43fd0f9231d9619e2",
+        "[Azure]global-cbp:A02119",
+        "[Azure]global-dataclass:Confidential",
+        "[Azure]global-dcs:AXA Seguros Spain",
+        "[Azure]global-env:Development",
+        "[Azure]global-opco:aes",
+        "[Azure]global-project:Public IaaS",
+        "[Azure]global-techserviceid:c19d9c3a1bec8994e3e66574604bcbee",
+        "[Azure]local-configuration:{\"license\"\\:\"Windows_Server\",\"os\"\\:\"Windows\",\"role\"\\:\"base\",\"support_resource_group\"\\:\"z-aes-support-dv01-ew1-01\",\"zones\"\\:\"2\\:1\"}",
+        "[Azure]local-configuration_backup:{\"policy\"\\:\"basic\",\"replicationtype\"\\:\"zonal\"}",
+        "[Azure]local-configuration_disks:{\"data_disks\"\\:2,\"data_disksize\"\\:300,\"os_disk_name\"\\:\"OSDisk\"}",
+        "[Azure]local-configuration_network:{\"exposure\"\\:\"internal\",\"source_address\"\\:\"100.113.139.15\",\"subnet\"\\:\"devs-int-pic-rt\",\"vnet\"\\:\"zaesintspkdv01ew1net01\"}",
+        "[Azure]local-configuration_recovery:{\"class\"\\:\"Bronze\",\"source_location\"\\:\"westeurope\"}",
+        "[Azure]local-deployment:{\"flow_type\"\\:\"Standard\",\"moduleversion\"\\:\"5.0.3\",\"source\"\\:\"Rehosted\",\"usage\"\\:\"Apps\"}",
+        "[Azure]local-purpose:MPI",
+        "[Azure]local-silva_internal_id:035433",
+        "[Azure]local-vmfqdn:dama002d.ppprivmgmt.intraxa",
+        "[Azure]local-vmprovisioning:activity-orchreport-succeeded-iteration1",
+        "[Azure]local-vmprovisioningid:20230921-085624",
+        "[Azure]local-vmpuppetstatus:NotApplicable",
+        "[Azure]local-vmstartstop:true",
+        "[Azure]local-vmstartstoppriority:2",
+        "[Azure]local-vmstarttime:07\\:00",
+        "[Azure]local-vmstatus:Provisioned",
+        "[Azure]local-vmstoptime:01\\:00",
+        "[Azure]local-vmstopweekend:true",
+        "aes_monitoring_enabled:non-prod",
+        "host:dama002d"
+      ]
+    }
+  ],
+  "types": [
+    {
+      "indexRange": [
+        0,
+        0
+      ],
+      "mappings": {
+        "timestamp": {
+          "type": "timestamp"
+        },
+        "event.id": {
+          "type": "string"
+        },
+        "display_id": {
+          "type": "string"
+        },
+        "event.name": {
+          "type": "string"
+        },
+        "event.category": {
+          "type": "string"
+        },
+        "event.severity": {
+          "type": "long"
+        },
+        "event.status": {
+          "type": "string"
+        },
+        "event.status_transition": {
+          "type": "string"
+        },
+        "event.start": {
+          "type": "timestamp"
+        },
+        "event.end": {
+          "type": "undefined"
+        },
+        "root_cause_entity_id": {
+          "type": "undefined"
+        },
+        "root_cause_entity_name": {
+          "type": "undefined"
+        },
+        "affected_entity_ids": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "affected_entity_names": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "affected_entity_types": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.entity.host": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.entity.host.name": {
+          "type": "undefined"
+        },
+        "dt.host_group.id": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.entity.host_group.name": {
+          "type": "undefined"
+        },
+        "dt.source_entity": {
+          "type": "undefined"
+        },
+        "dt.source_entity.type": {
+          "type": "undefined"
+        },
+        "dt.davis.impact_level": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.davis.timeout": {
+          "type": "undefined"
+        },
+        "dt.davis.event_ids": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "entity_tags": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                59
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "indexRange": [
+        1,
+        1
+      ],
+      "mappings": {
+        "timestamp": {
+          "type": "timestamp"
+        },
+        "event.id": {
+          "type": "string"
+        },
+        "display_id": {
+          "type": "string"
+        },
+        "event.name": {
+          "type": "string"
+        },
+        "event.category": {
+          "type": "string"
+        },
+        "event.severity": {
+          "type": "long"
+        },
+        "event.status": {
+          "type": "string"
+        },
+        "event.status_transition": {
+          "type": "string"
+        },
+        "event.start": {
+          "type": "timestamp"
+        },
+        "event.end": {
+          "type": "undefined"
+        },
+        "root_cause_entity_id": {
+          "type": "undefined"
+        },
+        "root_cause_entity_name": {
+          "type": "undefined"
+        },
+        "affected_entity_ids": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "affected_entity_names": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "affected_entity_types": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.entity.host": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.entity.host.name": {
+          "type": "undefined"
+        },
+        "dt.host_group.id": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.entity.host_group.name": {
+          "type": "undefined"
+        },
+        "dt.source_entity": {
+          "type": "undefined"
+        },
+        "dt.source_entity.type": {
+          "type": "undefined"
+        },
+        "dt.davis.impact_level": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.davis.timeout": {
+          "type": "undefined"
+        },
+        "dt.davis.event_ids": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "entity_tags": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                53
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "indexRange": [
+        2,
+        2
+      ],
+      "mappings": {
+        "timestamp": {
+          "type": "timestamp"
+        },
+        "event.id": {
+          "type": "string"
+        },
+        "display_id": {
+          "type": "string"
+        },
+        "event.name": {
+          "type": "string"
+        },
+        "event.category": {
+          "type": "string"
+        },
+        "event.severity": {
+          "type": "long"
+        },
+        "event.status": {
+          "type": "string"
+        },
+        "event.status_transition": {
+          "type": "string"
+        },
+        "event.start": {
+          "type": "timestamp"
+        },
+        "event.end": {
+          "type": "undefined"
+        },
+        "root_cause_entity_id": {
+          "type": "undefined"
+        },
+        "root_cause_entity_name": {
+          "type": "undefined"
+        },
+        "affected_entity_ids": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "affected_entity_names": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "affected_entity_types": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.entity.host": {
+          "type": "undefined"
+        },
+        "dt.entity.host.name": {
+          "type": "undefined"
+        },
+        "dt.host_group.id": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.entity.host_group.name": {
+          "type": "undefined"
+        },
+        "dt.source_entity": {
+          "type": "undefined"
+        },
+        "dt.source_entity.type": {
+          "type": "undefined"
+        },
+        "dt.davis.impact_level": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.davis.timeout": {
+          "type": "undefined"
+        },
+        "dt.davis.event_ids": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "entity_tags": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                15
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "indexRange": [
+        3,
+        3
+      ],
+      "mappings": {
+        "timestamp": {
+          "type": "timestamp"
+        },
+        "event.id": {
+          "type": "string"
+        },
+        "display_id": {
+          "type": "string"
+        },
+        "event.name": {
+          "type": "string"
+        },
+        "event.category": {
+          "type": "string"
+        },
+        "event.severity": {
+          "type": "long"
+        },
+        "event.status": {
+          "type": "string"
+        },
+        "event.status_transition": {
+          "type": "string"
+        },
+        "event.start": {
+          "type": "timestamp"
+        },
+        "event.end": {
+          "type": "undefined"
+        },
+        "root_cause_entity_id": {
+          "type": "undefined"
+        },
+        "root_cause_entity_name": {
+          "type": "undefined"
+        },
+        "affected_entity_ids": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "affected_entity_names": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "affected_entity_types": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.entity.host": {
+          "type": "undefined"
+        },
+        "dt.entity.host.name": {
+          "type": "undefined"
+        },
+        "dt.host_group.id": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.entity.host_group.name": {
+          "type": "undefined"
+        },
+        "dt.source_entity": {
+          "type": "undefined"
+        },
+        "dt.source_entity.type": {
+          "type": "undefined"
+        },
+        "dt.davis.impact_level": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.davis.timeout": {
+          "type": "undefined"
+        },
+        "dt.davis.event_ids": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                1
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "entity_tags": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                18
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "indexRange": [
+        4,
+        4
+      ],
+      "mappings": {
+        "timestamp": {
+          "type": "timestamp"
+        },
+        "event.id": {
+          "type": "string"
+        },
+        "display_id": {
+          "type": "string"
+        },
+        "event.name": {
+          "type": "string"
+        },
+        "event.category": {
+          "type": "string"
+        },
+        "event.severity": {
+          "type": "long"
+        },
+        "event.status": {
+          "type": "string"
+        },
+        "event.status_transition": {
+          "type": "string"
+        },
+        "event.start": {
+          "type": "timestamp"
+        },
+        "event.end": {
+          "type": "undefined"
+        },
+        "root_cause_entity_id": {
+          "type": "undefined"
+        },
+        "root_cause_entity_name": {
+          "type": "undefined"
+        },
+        "affected_entity_ids": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "affected_entity_names": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "affected_entity_types": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.entity.host": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.entity.host.name": {
+          "type": "undefined"
+        },
+        "dt.host_group.id": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.entity.host_group.name": {
+          "type": "undefined"
+        },
+        "dt.source_entity": {
+          "type": "undefined"
+        },
+        "dt.source_entity.type": {
+          "type": "undefined"
+        },
+        "dt.davis.impact_level": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "dt.davis.timeout": {
+          "type": "undefined"
+        },
+        "dt.davis.event_ids": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                0
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "entity_tags": {
+          "type": "array",
+          "types": [
+            {
+              "indexRange": [
+                0,
+                59
+              ],
+              "mappings": {
+                "element": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "grail": {
+      "analysisTimeframe": {
+        "end": "2026-06-30T14:39:04.724426185Z",
+        "start": "2026-06-29T14:39:04.724426185Z"
+      },
+      "canonicalQuery": "fetch events, from:now() - 24h\n| filter event.kind == \"DAVIS_PROBLEM\" AND event.status == \"ACTIVE\" AND event.status_transition == \"CREATED\" AND (event.category == \"AVAILABILITY\" OR event.category == \"ERROR\" OR event.category == \"RESOURCE_CONTENTION\") AND (maintenance.is_under_maintenance == FALSE OR isNotNull(maintenance.is_under_maintenance))\n| fields timestamp, event.id, display_id, event.name, event.category, event.severity, event.status, event.status_transition, event.start, event.end, root_cause_entity_id, root_cause_entity_name, affected_entity_ids, affected_entity_names, affected_entity_types, dt.entity.host, dt.entity.host.name, dt.host_group.id, dt.entity.host_group.name, dt.source_entity, dt.source_entity.type, dt.davis.impact_level, dt.davis.timeout, dt.davis.event_ids, entity_tags\n| limit 5\n| sort timestamp desc",
+      "contributions": {
+        "buckets": [
+          {
+            "matchedRecordsRatio": 1,
+            "name": "default_davis_events",
+            "scannedBytes": 11340396,
+            "table": "events"
+          },
+          {
+            "matchedRecordsRatio": 0,
+            "name": "default_synthetic_detailed_events",
+            "scannedBytes": 1231115,
+            "table": "events"
+          },
+          {
+            "matchedRecordsRatio": 0,
+            "name": "default_hm_synthetic_events",
+            "scannedBytes": 185074,
+            "table": "events"
+          },
+          {
+            "matchedRecordsRatio": 0,
+            "name": "default_davis_custom_events",
+            "scannedBytes": 62594,
+            "table": "events"
+          },
+          {
+            "matchedRecordsRatio": 0,
+            "name": "default_synthetic_events",
+            "scannedBytes": 2137,
+            "table": "events"
+          }
+        ]
+      },
+      "dqlVersion": "V1_0",
+      "executionTimeMilliseconds": 46,
+      "flags": [
+        "CLASSIC_ENTITY_MIGRATION_ADVISED"
+      ],
+      "locale": "es",
+      "notifications": [
+        {
+          "arguments": [],
+          "message": "Smartscape ids are provided through the `dt.smartscape.*` fields.",
+          "messageFormat": "Smartscape ids are provided through the `dt.smartscape.*` fields.",
+          "messageFormatSpecifierTypes": [],
+          "notificationType": "DEPRECATED_ENTITY_FIELD",
+          "severity": "INFO",
+          "syntaxPosition": {
+            "start": {
+              "column": 5,
+              "index": 684,
+              "line": 24
+            },
+            "end": {
+              "column": 18,
+              "index": 697,
+              "line": 24
+            }
+          }
+        },
+        {
+          "arguments": [],
+          "message": "Smartscape ids are provided through the `dt.smartscape.*` fields.",
+          "messageFormat": "Smartscape ids are provided through the `dt.smartscape.*` fields.",
+          "messageFormatSpecifierTypes": [],
+          "notificationType": "DEPRECATED_ENTITY_FIELD",
+          "severity": "INFO",
+          "syntaxPosition": {
+            "start": {
+              "column": 5,
+              "index": 704,
+              "line": 25
+            },
+            "end": {
+              "column": 23,
+              "index": 722,
+              "line": 25
+            }
+          }
+        },
+        {
+          "arguments": [],
+          "message": "Smartscape ids are provided through the `dt.smartscape.*` fields.",
+          "messageFormat": "Smartscape ids are provided through the `dt.smartscape.*` fields.",
+          "messageFormatSpecifierTypes": [],
+          "notificationType": "DEPRECATED_ENTITY_FIELD",
+          "severity": "INFO",
+          "syntaxPosition": {
+            "start": {
+              "column": 5,
+              "index": 751,
+              "line": 27
+            },
+            "end": {
+              "column": 29,
+              "index": 775,
+              "line": 27
+            }
+          }
+        }
+      ],
+      "query": "fetch events, from: now() - 24h\n| filter event.kind == \"DAVIS_PROBLEM\"\n  and event.status == \"ACTIVE\"\n  and event.status_transition == \"CREATED\"\n  and (event.category == \"AVAILABILITY\" or event.category == \"ERROR\" or event.category == \"RESOURCE_CONTENTION\")\n  and (maintenance.is_under_maintenance == false or isNotNull(maintenance.is_under_maintenance))\n  \n| fields\n    timestamp,\n    event.id,\n    display_id,\n    event.name,\n    event.category,\n    event.severity,\n    event.status,\n    event.status_transition,\n    event.start,\n    event.end,\n    root_cause_entity_id,\n    root_cause_entity_name,\n    affected_entity_ids,\n    affected_entity_names,\n    affected_entity_types,\n    dt.entity.host,\n    dt.entity.host.name,\n    dt.host_group.id,\n    dt.entity.host_group.name,\n    dt.source_entity,\n    dt.source_entity.type,\n    dt.davis.impact_level,\n    dt.davis.timeout,\n    dt.davis.event_ids,\n    entity_tags\n    |limit 5\n| sort timestamp desc",
+      "queryId": "54990b66-7e98-4124-bacc-8397db73e0a0",
+      "sampled": false,
+      "scannedBytes": 12821316,
+      "scannedDataPoints": 0,
+      "scannedRecords": 31323,
+      "timezone": "Europe/Madrid"
+    }
+  }
+}
