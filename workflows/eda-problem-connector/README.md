@@ -64,7 +64,16 @@ or event.category == "RESOURCE_CONTENTION")
 - **No actúa dentro de ventanas de mantenimiento** (`maintenanceWindowTriggerBehavior: outside`) — si la entidad está en mantenimiento, el problema no se procesa y **no se envía nada a EDA**
 - Hay un filtro de Filenet comentado en el JSON (`event.name`), heredado como plantilla del conector de eventos; se puede descomentar para restringir el scope
 
-> ⚠️ **Importante:** a diferencia del conector de eventos, **no hay un payload real de un problema (`DAVIS_PROBLEM`) capturado en este repositorio para validar nombres de campo.** El mapeo de abajo se basa en: (a) los campos confirmados en los payloads reales de `DAVIS_EVENT` en [`../eda-event-connector/results/`](../eda-event-connector/results/) que pertenecen al mismo modelo de datos Davis (mismo namespace `event.*`, `dt.entity.*`, `dt.davis.*`), y (b) el diccionario semántico de Dynatrace para problemas (`display_id`, `root_cause_entity_id`, `affected_entity_ids`, `dt.davis.event_ids`, etc.). **Debe validarse contra una ejecución real antes de activar el trigger** — ver sección "Pendientes".
+> ✅ **Validado contra datos reales (2026-06-30):** el mapeo se contrastó contra 5 problemas reales del tenant ([`ProblemsExample.JSON`](ProblemsExample.JSON), capturados con `trigger-problems.dql` vía DQL). Hallazgos que corrigieron el mapeo inicial:
+>
+> - `dt.entity.host`, `dt.host_group.id` y `dt.davis.impact_level` llegan como **array** a nivel de problema (no como string suelto, a diferencia de los eventos individuales) — el script usa un helper `first()` para extraerlos.
+> - `root_cause_entity_id`/`root_cause_entity_name` vinieron **`null` en los 5 casos**, incluido uno de servicio JBoss. Davis no siempre resuelve una causa raíz única para estas categorías de problema — **no depender de estos campos**, usar `affected_entity_*`.
+> - En problemas a nivel **servicio** (ej. `Failure rate increase` en un servicio JBoss), `dt.entity.host` viene `null` — la entidad solo aparece en `affected_entity_ids/names/types`. Por eso se añadieron `affected_entity_id/name/type` (primer elemento) como campos principales de ubicación, independientes de si la entidad es host o service.
+> - `dt.davis.timeout` vino **siempre `null`** a nivel de problema en los 5 casos (sí tenía valor a nivel de evento individual en `eda-event-connector`).
+> - ⚠️ **Hallazgo crítico:** en el problema de JBoss (`P-260614046`, categoría `ERROR`, entorno `PRE`), las tags `AGO_AXAOPCOTRIGRAM:` y `AGO_DEFAULT_ASSIGNMENT_GROUP:` **no estaban presentes** en `entity_tags` → `opco` y `assignment_group` resuelven a `null`. Solo los problemas de tipo *host* en entorno `DEV` de la muestra traían el set completo de tags `AGO_*`. **Antes de depender de `assignment_group`/`opco` para enrutar en EDA, confirmar si esto es un gap de tagging en PRE o un patrón sistemático en problemas de tipo servicio.**
+> - Ningún ejemplo de los 5 fue de **disco** — el filtro/mapeo no se ha validado todavía contra ese caso de uso concreto.
+>
+> Campos que siguen sin confirmar (no estaban en el `fields` de la DQL usada): `dt.event.correlation_id`, `event.description`, `dt.davis.mute.status`. Se mantienen en el mapeo por convención del mismo namespace Davis, pero no hay evidencia directa de su presencia a nivel de problema.
 
 ---
 
@@ -97,35 +106,38 @@ const requiredFields = ["event.id", "event.name", "event.category"];
 | `display_id`               | `event["display_id"]`                 | ID legible (ej. `P-2307288`) — **validar en staging**    |
 | `correlation_id`           | `event["dt.event.correlation_id"]`    | Correlación entre eventos relacionados                   |
 | `event_name`                | `event["event.name"]`                 | Título del problema (campo requerido)                    |
-| `event_description`        | `event["event.description"]`          | Descripción libre                                        |
-| `event_category`           | `event["event.category"]`             | Ej: `AVAILABILITY`, `ERROR` (campo requerido)             |
-| `event_severity`           | `event["event.severity"]`             | Nivel de severidad — **validar en staging**               |
-| `event_status`              | `event["event.status"]`               | Estado actual (`ACTIVE`, `CLOSED`…)                       |
-| `status_transition`        | `event["event.status_transition"]`    | Transición que disparó el workflow                        |
-| `event_start`               | `toISO(event["event.start"])`         | Normalizado a ISO 8601                                    |
+| `event_description`        | `event["event.description"]`          | Descripción libre — *no confirmado en datos reales*       |
+| `event_category`           | `event["event.category"]`             | Ej: `AVAILABILITY`, `ERROR`, `RESOURCE_CONTENTION` (campo requerido) — confirmado |
+| `event_severity`           | `event["event.severity"]`             | Confirmado (`long`, valor `3` en los 5 casos de muestra)  |
+| `event_status`              | `event["event.status"]`               | Estado actual (`ACTIVE`, `CLOSED`…) — confirmado          |
+| `status_transition`        | `event["event.status_transition"]`    | Transición que disparó el workflow — confirmado            |
+| `event_start`               | `toISO(event["event.start"])`         | Normalizado a ISO 8601 — confirmado                        |
 | `event_end`                 | `toISO(event["event.end"])`           | Normalizado a ISO 8601, `null` si el problema sigue activo |
-| `root_cause_entity_id`      | `event["root_cause_entity_id"]`       | Entidad identificada como causa raíz — **validar en staging** |
-| `root_cause_entity_name`    | `event["root_cause_entity_name"]`     | **validar en staging**                                     |
-| `affected_entity_ids`       | `event["affected_entity_ids"]`        | Array; presente también en eventos `DAVIS_EVENT`           |
-| `affected_entity_names`     | `event["affected_entity_names"]`      | **validar en staging**                                     |
-| `affected_entity_types`     | `event["affected_entity_types"]`      | Array; presente también en eventos `DAVIS_EVENT`           |
-| `host_id`                   | `event["dt.entity.host"]`             | ID de entidad host                                         |
-| `host_name`                 | `event["dt.entity.host.name"]` \| `event["host.name"]` | Nombre del host afectado                  |
-| `host_group_id`             | `event["dt.host_group.id"]`           |                                                              |
-| `host_group_name`           | `event["dt.entity.host_group.name"]`  |                                                              |
-| `source_entity_type`        | `event["dt.source_entity.type"]`      |                                                              |
-| `source_entity`             | `event["dt.source_entity"]`           |                                                              |
-| `environment`                | `entity_tags` → tag `ENVIRONMENT:`    | Extraído del array de tags de la entidad                   |
-| `opco`                       | `entity_tags` → tag `AGO_AXAOPCOTRIGRAM:` |                                                          |
-| `assignment_group`          | `entity_tags` → tag `AGO_DEFAULT_ASSIGNMENT_GROUP:` |                                                |
-| `platform`                   | `entity_tags` → tag `AGO_AXAPLATFORM:` |                                                             |
-| `app`                         | `entity_tags` → tag `AGO_GLOBAL_APP:`  |                                                             |
-| `app_service_id`            | `entity_tags` → tag `AGO_GLOBAL_APPSERVICEID:` |                                                     |
-| `patch_environment`         | `entity_tags` → tag `AGO_AXAPATCHENVIRONMENT:` |                                                     |
-| `timeout_minutes`           | `event["dt.davis.timeout"]`           | Timeout de remediación Davis                               |
-| `impact_level`               | `event["dt.davis.impact_level"]`      |                                                              |
-| `mute_status`                | `event["dt.davis.mute.status"]`       |                                                              |
-| `underlying_event_ids`      | `event["dt.davis.event_ids"]`         | Eventos Davis que componen el problema — **validar en staging** |
+| `root_cause_entity_id`      | `event["root_cause_entity_id"]`       | Confirmado: **siempre `null`** en los 5 casos reales — no depender de él |
+| `root_cause_entity_name`    | `event["root_cause_entity_name"]`     | Confirmado: **siempre `null`** en los 5 casos reales        |
+| `affected_entity_id`        | `first(event["affected_entity_ids"])` | **Campo principal de ubicación** — primer elemento, confirmado en host y service |
+| `affected_entity_name`      | `first(event["affected_entity_names"])` | Confirmado — ej. nombre de host o `host:puerto` para servicios |
+| `affected_entity_type`      | `first(event["affected_entity_types"])` | Confirmado — `dt.entity.host` o `dt.entity.service`        |
+| `affected_entity_ids`       | `event["affected_entity_ids"]`        | Array completo, confirmado                                  |
+| `affected_entity_names`     | `event["affected_entity_names"]`      | Array completo, confirmado                                  |
+| `affected_entity_types`     | `event["affected_entity_types"]`      | Array completo, confirmado                                  |
+| `host_id`                   | `first(event["dt.entity.host"])`      | Confirmado como **array** en problemas; `null` cuando la entidad afectada es un service (ej. JBoss) |
+| `host_name`                 | `event["dt.entity.host.name"]` \| `event["host.name"]` | Confirmado: **siempre `null`** en los 5 casos reales — usar `affected_entity_name` |
+| `host_group_id`             | `first(event["dt.host_group.id"])`    | Confirmado como **array**; presente tanto en problemas host como service |
+| `host_group_name`           | `event["dt.entity.host_group.name"]`  | Confirmado: **siempre `null`** en los 5 casos reales — usar `host_group_id` |
+| `source_entity_type`        | `event["dt.source_entity.type"]`      | Confirmado: **siempre `null`** a nivel de problema (campo de evento individual) |
+| `source_entity`             | `event["dt.source_entity"]`           | Confirmado: **siempre `null`** a nivel de problema           |
+| `environment`                | `entity_tags` → tag `ENVIRONMENT:`    | Extraído del array de tags de la entidad — confirmado       |
+| `opco`                       | `entity_tags` → tag `AGO_AXAOPCOTRIGRAM:` | ⚠️ `null` en problemas de tipo *service* en la muestra (ver nota arriba) |
+| `assignment_group`          | `entity_tags` → tag `AGO_DEFAULT_ASSIGNMENT_GROUP:` | ⚠️ `null` en problemas de tipo *service* en la muestra |
+| `platform`                   | `entity_tags` → tag `AGO_AXAPLATFORM:` | ⚠️ `null` en problemas de tipo *service* en la muestra      |
+| `app`                         | `entity_tags` → tag `AGO_GLOBAL_APP:`  | Confirmado presente en todos los casos (host y service)     |
+| `app_service_id`            | `entity_tags` → tag `AGO_GLOBAL_APPSERVICEID:` | ⚠️ `null` en problemas de tipo *service* en la muestra |
+| `patch_environment`         | `entity_tags` → tag `AGO_AXAPATCHENVIRONMENT:` | ⚠️ `null` en problemas de tipo *service* en la muestra |
+| `timeout_minutes`           | `first(event["dt.davis.timeout"])`    | Confirmado: **siempre `null`** a nivel de problema           |
+| `impact_level`               | `first(event["dt.davis.impact_level"])` | Confirmado como **array** (`["Infrastructure"]`, `["Services"]`) |
+| `mute_status`                | `event["dt.davis.mute.status"]`       | *No confirmado en datos reales* (no estaba en el `fields` de la DQL) |
+| `underlying_event_ids`      | `event["dt.davis.event_ids"]`         | Confirmado — array de 1 o más IDs (ej. el problema de Webmethods agrupó 2 eventos) |
 
 Si un tag no existe en la entidad, el campo se resuelve como `null`. Mismas tags requeridas que en `eda-event-connector` (ver su README).
 
@@ -154,24 +166,28 @@ Igual patrón que en `eda-event-connector`: envía el payload normalizado comple
 |---|---|
 | `eda-problem-integration.workflow.json` | Export del workflow listo para importar en Dynatrace |
 | `trigger-problems.dql` | Query DQL de referencia que replica el filtro del trigger, para explorar qué problemas entrarían al workflow |
+| `ProblemsExample.JSON` | 5 problemas reales capturados el 2026-06-30 con `trigger-problems.dql`, usados para validar el mapeo de campos |
 
 ---
 
 ## Configuración antes de activar
 
-1. **Capturar un payload real de un problema (`DAVIS_PROBLEM`)** y validar contra él todos los campos marcados como "validar en staging" en la tabla de mapeo — este es el paso más importante, ya que el mapeo actual no está verificado contra una ejecución real de problema (a diferencia del conector de eventos)
-2. **Verificar `connectionId`:** debe apuntar a la conexión EDA activa del tenant
-3. **Decidir el destino de `send_email_1`** antes de producción (ver nota arriba)
-4. **Ajustar el filtro de categoría/severidad** (`event.category in (...)`) según el volumen real observado con `trigger-problems.dql`
-5. **Revisar `hourlyExecutionLimit`** (actual: 1000)
-6. **Evaluar solapamiento con `eda-event-connector`:** si ambos workflows están activos, un mismo incidente puede generar tanto un evento como un problema; coordinar con EDA para deduplicar por `correlation_id`/`display_id` y evitar remediaciones duplicadas
-7. **Activar el trigger:** cambiar `isActive` a `true` en el JSON o desde la UI de Dynatrace
+1. **Resolver el gap de tags `AGO_*` en problemas de tipo servicio** (ver hallazgo crítico arriba) — confirmar con el equipo de tagging si es esperado o un bug de configuración en PRE, antes de depender de `opco`/`assignment_group`/`app_service_id`/`patch_environment` para enrutar remediaciones de servicios (JBoss, httpd, etc.)
+2. **Capturar al menos un problema real de categoría disco/recurso** para validar el caso de uso de limpieza de disco (la muestra de 5 no incluyó ninguno)
+3. **Verificar `connectionId`:** debe apuntar a la conexión EDA activa del tenant
+4. **Decidir el destino de `send_email_1`** antes de producción (ver nota arriba)
+5. **Ajustar el filtro de categoría/severidad** (`event.category in (...)`) según el volumen real observado con `trigger-problems.dql`
+6. **Revisar `hourlyExecutionLimit`** (actual: 1000)
+7. **Evaluar solapamiento con `eda-event-connector`:** si ambos workflows están activos, un mismo incidente puede generar tanto un evento como un problema; coordinar con EDA para deduplicar por `correlation_id`/`display_id` y evitar remediaciones duplicadas. La muestra real mostró dos problemas `Memory saturation` sobre el mismo host en menos de una hora — considerar cooldown/deduplicación también dentro de un mismo tipo de problema
+8. **Activar el trigger:** cambiar `isActive` a `true` en el JSON o desde la UI de Dynatrace
 
 ---
 
 ## Pendientes / próximos pasos
 
-- [ ] Capturar y validar un payload real de problema Davis (`event.kind == "DAVIS_PROBLEM"`) — confirmar nombres exactos de `display_id`, `event.severity`, `root_cause_entity_id/name`, `affected_entity_names`, `dt.davis.event_ids`
+- [x] Capturar y validar un payload real de problema Davis (`event.kind == "DAVIS_PROBLEM"`) — hecho el 2026-06-30 con 5 problemas reales (`ProblemsExample.JSON`); ver correcciones aplicadas al mapeo arriba
+- [ ] **Investigar por qué los problemas de tipo servicio (JBoss) no traen tags `AGO_*` de enrutamiento** — bloqueante para el caso de uso de reinicio de JBoss/httpd si EDA depende de `assignment_group`
+- [ ] Capturar un problema real de categoría disco para validar ese caso de uso
 - [ ] Definir estrategia de deduplicación con `eda-event-connector` en el lado de EDA
 - [ ] Decidir si activar `onProblemClose: true` para notificar a EDA cuando el problema se resuelve y cancelar remediaciones en curso
 - [ ] Decidir el destino final de `send_email_1` (eliminar / convertir en alerta de error / redirigir a lista de distribución)
