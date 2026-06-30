@@ -6,17 +6,21 @@
 // explorar volumen/contenido de problemas con DQL ad-hoc - no es literalmente
 // la query que ejecuta el trigger.
 //
-// maintenanceWindowTriggerBehavior: pendiente de confirmar si "davis-problem"
-// tiene un control equivalente al de "davis-event" (outside) - ver README.
-//       Para ver qué problemas quedaron excluidos, cambia el filtro
-//       de maintenance.is_under_maintenance a == true.
+// maintenanceWindowTriggerBehavior: "davis-problem" no tiene ese control en la UI
+// (a diferencia de "davis-event"). Se resuelve via customFilter con isFalseOrNull(),
+// ver README. Usamos isFalseOrNull() y no "== null" porque en DQL la comparacion
+// de igualdad con null es logica de tres estados (true/false/null) y "campo == null"
+// nunca evalua a true - hay que usar las funciones isNull()/isNotNull()/
+// isFalseOrNull()/isTrueOrNull() para chequeos de nulidad.
+//       Para ver qué problemas quedaron excluidos, invierte la condicion:
+//       maintenance.is_under_maintenance == true
 
 fetch events, from: now() - 24h
 | filter event.kind == "DAVIS_PROBLEM"
   and event.status == "ACTIVE"
   and event.status_transition == "CREATED"
   and (event.category == "AVAILABILITY" or event.category == "ERROR" or event.category == "RESOURCE_CONTENTION")
-  and (maintenance.is_under_maintenance == false or maintenance.is_under_maintenance == null)
+  and isFalseOrNull(maintenance.is_under_maintenance)
 | fields
     timestamp,
     event.id,
