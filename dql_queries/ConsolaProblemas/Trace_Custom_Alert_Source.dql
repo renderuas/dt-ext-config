@@ -1,0 +1,72 @@
+// Query 1: encuentra los eventos del custom alert y muestra campos de origen.
+fetch events, from: -14d
+| filter event.kind == "DAVIS_EVENT"
+  and event.category == "CUSTOM_ALERT"
+  and event.name == "AGO - Rsyslog Selfheal Script Failed"
+| fields timestamp,
+         event.id,
+         event.status,
+         event.status_transition,
+         event.name,
+         event.type,
+         event.category,
+         event.provider,
+         event.source,
+         event.description,
+         event.timeout,
+         event.correlation_id,
+         dt.system.bucket,
+         dt.entity.host,
+         dt.entity.process_group,
+         dt.entity.service
+| sort timestamp desc
+| limit 200
+
+// Query 2: resumen para identificar emisor mas frecuente y correlaciones.
+fetch events, from: -14d
+| filter event.kind == "DAVIS_EVENT"
+  and event.category == "CUSTOM_ALERT"
+  and event.name == "AGO - Rsyslog Selfheal Script Failed"
+| summarize total = count(),
+            by: {
+              event.provider,
+              event.source,
+              event.correlation_id,
+              dt.system.bucket
+            }
+| sort total desc
+
+// Query 3: misma alerta acotada a tu host del problema.
+fetch events, from: -14d
+| filter event.kind == "DAVIS_EVENT"
+  and event.category == "CUSTOM_ALERT"
+  and event.name == "AGO - Rsyslog Selfheal Script Failed"
+  and dt.entity.host == "HOST-5A6B9BB00A0A70A0"
+| fields timestamp,
+         event.id,
+         event.status,
+         event.status_transition,
+         event.provider,
+         event.source,
+         event.correlation_id,
+         dt.entity.host
+| sort timestamp desc
+| limit 100
+
+// Query 4: top hosts impactados por esta alerta.
+fetch events, from: -14d
+| filter event.kind == "DAVIS_EVENT"
+  and event.category == "CUSTOM_ALERT"
+  and event.name == "AGO - Rsyslog Selfheal Script Failed"
+  and event.status_transition == "CREATED"
+| summarize total = count(), by: { dt.entity.host }
+| sort total desc
+| limit 50
+
+// Query 5: serie temporal (creaciones) para ver periodicidad del emisor.
+fetch events, from: -14d
+| filter event.kind == "DAVIS_EVENT"
+  and event.category == "CUSTOM_ALERT"
+  and event.name == "AGO - Rsyslog Selfheal Script Failed"
+  and event.status_transition == "CREATED"
+| makeTimeseries total = count(), interval: 1h

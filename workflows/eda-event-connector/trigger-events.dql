@@ -1,0 +1,34 @@
+// Eventos que entrarían en el workflow EDA-Event-Integration
+// Replica exacta del filtro del trigger (davis-event)
+//
+// Nota: maintenanceWindowTriggerBehavior = "outside"
+//       → el workflow NO dispara si la entidad está en mantenimiento.
+//       Para ver qué eventos quedaron excluidos, cambia el filtro
+//       de maintenance.is_under_maintenance a == true.
+
+fetch events, from: now() - 24h
+| filter event.kind == "DAVIS_EVENT"
+  and event.category == "CUSTOM_ALERT"
+  and event.status == "ACTIVE"
+  and event.status_transition == "CREATED"
+  and (maintenance.is_under_maintenance == false or maintenance.is_under_maintenance == null)
+| fields
+    timestamp,
+    event.id,
+    event.name,
+    event.category,
+    event.status,
+    event.status_transition,
+    event.start,
+    event.end,
+    dt.entity.host,
+    dt.entity.host.name,
+    dt.host_group.id,
+    dt.entity.host_group.name,
+    dt.source_entity,
+    dt.source_entity.type,
+    dt.davis.impact_level,
+    dt.davis.timeout,
+    dt.davis.problems,
+    entity_tags
+| sort timestamp desc

@@ -1,0 +1,6 @@
+2026-06-30 13:57:14,428 [INFO] **************Inicio de proceso**************
+2026-06-30 13:57:16,618 [INFO] Etiqueta 'disableProblems' anadida a 'ZAESCTXSASPR02.axa-seguros-es.intraxa' (ID: HOST-FEDD3A2E1104E026). respuesta HTTP: 200.
+2026-06-30 13:57:16,625 [INFO] ###############Fin de proceso###############
+2026-06-30 13:57:57,252 [INFO] **************Inicio de proceso**************
+2026-06-30 13:57:58,201 [INFO] Etiqueta 'disableProblems' eliminada de 'ZAESCTXSASPR02.axa-seguros-es.intraxa' (ID: HOST-FEDD3A2E1104E026). respuesta HTTP: 200.
+2026-06-30 13:57:58,208 [INFO] ###############Fin de proceso###############

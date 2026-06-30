@@ -1,0 +1,8 @@
+// Propósito: Calcula la tasa de error (%) de un servicio puntual en una ventana de 30 minutos.
+// Parámetros a reemplazar: ${TU_SERVICE_ID}, {{ambiente}}
+// Autor: <nombre> | Fecha: <YYYY-MM-DD>
+
+fetch spans, from: -30m
+| filter dt.entity.service == "${TU_SERVICE_ID}"
+| summarize total = count(), errors = countIf(span.status_code == "ERROR")
+| fields environment = "{{ambiente}}", total, errors, error_rate_pct = (errors * 100.0) / total

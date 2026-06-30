@@ -1,0 +1,588 @@
+{
+  "problemId": "6300060085875419265_1782173100118V2",
+  "displayId": "P-260610352",
+  "title": "Group Policy Client is in undesirable (stopped) state",
+  "impactLevel": "INFRASTRUCTURE",
+  "severityLevel": "AVAILABILITY",
+  "status": "CLOSED",
+  "affectedEntities": [
+    {
+      "entityId": {
+        "id": "CUSTOM_DEVICE-8BCCB3A13DB809FD",
+        "type": "os:service"
+      },
+      "name": "Group Policy Client"
+    }
+  ],
+  "impactedEntities": [
+    {
+      "entityId": {
+        "id": "CUSTOM_DEVICE-8BCCB3A13DB809FD",
+        "type": "os:service"
+      },
+      "name": "Group Policy Client"
+    }
+  ],
+  "rootCauseEntity": null,
+  "managementZones": [
+    {
+      "id": "2949295338277778772",
+      "name": "AGO_OS_OVERALL_SILVA_ROLLOUT_PRD"
+    },
+    {
+      "id": "1306762949089439866",
+      "name": "[AESM] Produccion"
+    },
+    {
+      "id": "2758958212188616203",
+      "name": "AGO_OS_WIN_PRD"
+    },
+    {
+      "id": "3854002010878131093",
+      "name": "PRUEBA MZ PRODUCCION"
+    },
+    {
+      "id": "1831517544685320887",
+      "name": "[AESM] Produccion_old"
+    },
+    {
+      "id": "-1469080365935282890",
+      "name": "AGO_OS_OVERALL_PRD"
+    },
+    {
+      "id": "8216826790787824850",
+      "name": "ALERTADO PRODUCCION"
+    }
+  ],
+  "entityTags": [
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_AXAGOSCOPE",
+      "value": "True",
+      "stringRepresentation": "AGO_AXAGOSCOPE:True"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_DB",
+      "value": "MSSQL",
+      "stringRepresentation": "AGO_DB:MSSQL"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "TIER",
+      "value": "DB",
+      "stringRepresentation": "TIER:DB"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_AXAATSLEGALENTITY",
+      "value": "AXA-TECH-SPAIN",
+      "stringRepresentation": "AGO_AXAATSLEGALENTITY:AXA-TECH-SPAIN"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_AXAOPCOTRIGRAM",
+      "value": "AES",
+      "stringRepresentation": "AGO_AXAOPCOTRIGRAM:AES"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "TECHNOLOGY",
+      "value": "SQL",
+      "stringRepresentation": "TECHNOLOGY:SQL"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_AXAROLE",
+      "value": "SQL",
+      "stringRepresentation": "AGO_AXAROLE:SQL"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "APP",
+      "value": "PJ",
+      "stringRepresentation": "APP:PJ"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_OS",
+      "value": "Windows",
+      "stringRepresentation": "AGO_OS:Windows"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_Ora_backup",
+      "value": "enhanced",
+      "stringRepresentation": "AGO_Ora_backup:enhanced"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "ENVIRONMENT",
+      "value": "PRO",
+      "stringRepresentation": "ENVIRONMENT:PRO"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_DEFAULT_ASSIGNMENT_GROUP",
+      "value": "DIS-SERV_L2_ITSP",
+      "stringRepresentation": "AGO_DEFAULT_ASSIGNMENT_GROUP:DIS-SERV_L2_ITSP"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AESM_GLOBAL_ENVIRONMENT",
+      "value": "production",
+      "stringRepresentation": "AESM_GLOBAL_ENVIRONMENT:production"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "HostGroup",
+      "value": "PRO_DB_SQL_PJ",
+      "stringRepresentation": "HostGroup:PRO_DB_SQL_PJ"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_AXAENVIRONMENTNAME",
+      "value": "Production",
+      "stringRepresentation": "AGO_AXAENVIRONMENTNAME:Production"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_AXAPATCHENVIRONMENT",
+      "value": "PRODUCTION",
+      "stringRepresentation": "AGO_AXAPATCHENVIRONMENT:PRODUCTION"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_AXAPLATFORM",
+      "value": "POD",
+      "stringRepresentation": "AGO_AXAPLATFORM:POD"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_CSP_REGION",
+      "value": "SE",
+      "stringRepresentation": "AGO_CSP_REGION:SE"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "host",
+      "value": "cama1011",
+      "stringRepresentation": "host:cama1011"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_ALERTING_PRD",
+      "stringRepresentation": "AGO_ALERTING_PRD"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "AGO_Not_AD",
+      "value": "True",
+      "stringRepresentation": "AGO_Not_AD:True"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "Arquitectura x86",
+      "stringRepresentation": "Arquitectura x86"
+    },
+    {
+      "context": "CONTEXTLESS",
+      "key": "Windows",
+      "stringRepresentation": "Windows"
+    }
+  ],
+  "problemFilters": [
+    {
+      "id": "765dc076-bf6e-39c7-baf1-04d710fb5c97",
+      "name": "[AESM] Alertas_24x7_PRUEBAS_PRO"
+    },
+    {
+      "id": "820db4fb-771c-354a-91d8-6f18eaa4fe6e",
+      "name": "[AESM] Produccion"
+    },
+    {
+      "id": "c21f969b-5f03-333d-83e0-4f8f136e7682",
+      "name": "Default"
+    },
+    {
+      "id": "8e01e2be-7b3b-3c27-a3b6-c40eba517d8b",
+      "name": "AESM_Monitoring"
+    }
+  ],
+  "startTime": 1782173100118,
+  "endTime": 1782176919402,
+  "evidenceDetails": {
+    "totalCount": 1,
+    "details": [
+      {
+        "evidenceType": "EVENT",
+        "displayName": "Group Policy Client is in undesirable (stopped) state",
+        "entity": {
+          "entityId": {
+            "id": "CUSTOM_DEVICE-8BCCB3A13DB809FD",
+            "type": "os:service"
+          },
+          "name": "Group Policy Client"
+        },
+        "groupingEntity": null,
+        "rootCauseRelevant": false,
+        "eventId": "6300060085875419265_1782173100118",
+        "eventType": "AVAILABILITY_EVENT",
+        "data": {
+          "eventId": "6300060085875419265_1782173100118",
+          "startTime": 1782173100118,
+          "endTime": 1782176919402,
+          "eventType": "AVAILABILITY_EVENT",
+          "title": "Group Policy Client is in undesirable (stopped) state",
+          "entityId": {
+            "entityId": {
+              "id": "CUSTOM_DEVICE-8BCCB3A13DB809FD",
+              "type": "os:service"
+            },
+            "name": "Group Policy Client"
+          },
+          "properties": [
+            {
+              "key": "Event_source",
+              "value": "OS services monitoring"
+            },
+            {
+              "key": "Monitoring_rule",
+              "value": "AGO - Windows - Citrix - gpsvc"
+            },
+            {
+              "key": "OS_service",
+              "value": "gpsvc"
+            },
+            {
+              "key": "OS_service_name",
+              "value": "Group Policy Client"
+            },
+            {
+              "key": "Status",
+              "value": "stopped"
+            },
+            {
+              "key": "axaatslegalentity",
+              "value": "AXA-TECH-SPAIN"
+            },
+            {
+              "key": "axaatsregion",
+              "value": "SE"
+            },
+            {
+              "key": "axaenvironmentname",
+              "value": "Production"
+            },
+            {
+              "key": "axaopcotrigram",
+              "value": "AES"
+            },
+            {
+              "key": "axapatchenvironment",
+              "value": "PRODUCTION"
+            },
+            {
+              "key": "axaplatform",
+              "value": "POD"
+            },
+            {
+              "key": "axarole",
+              "value": "SQL"
+            },
+            {
+              "key": "axasilvasupportgroup",
+              "value": "ATS_SESD_ES_DISTRIBUTED-SERV"
+            },
+            {
+              "key": "axasupportcountry",
+              "value": "ES"
+            },
+            {
+              "key": "backup",
+              "value": "enhanced"
+            },
+            {
+              "key": "csp_region",
+              "value": "SE"
+            },
+            {
+              "key": "dt.cost.costcenter",
+              "value": "AGO"
+            },
+            {
+              "key": "dt.cost.product",
+              "value": "PJ"
+            },
+            {
+              "key": "dt.entity.host",
+              "value": "HOST-142D7718C1B7E7AA"
+            },
+            {
+              "key": "dt.entity.host_group",
+              "value": "HOST_GROUP-29D42B473827B31A"
+            },
+            {
+              "key": "dt.event.allow_entity_remapping",
+              "value": "true"
+            },
+            {
+              "key": "dt.event.group_label",
+              "value": "Availability"
+            },
+            {
+              "key": "dt.event.impact_level",
+              "value": "Infrastructure"
+            },
+            {
+              "key": "dt.event.is_rootcause_relevant",
+              "value": "true"
+            },
+            {
+              "key": "dt.event.preferred_entity_type",
+              "value": "os:service"
+            },
+            {
+              "key": "dt.event.timeout",
+              "value": "0"
+            },
+            {
+              "key": "dt.event.title",
+              "value": "Group Policy Client is in undesirable (stopped) state"
+            },
+            {
+              "key": "dt.host_group.id",
+              "value": "PRO_DB_SQL_PJ"
+            },
+            {
+              "key": "dt.osservice.display_name",
+              "value": "Group Policy Client"
+            },
+            {
+              "key": "dt.osservice.name",
+              "value": "gpsvc"
+            },
+            {
+              "key": "dt.security_context",
+              "value": "PRO_DB_SQL_PJ"
+            },
+            {
+              "key": "dt.settings.object_id",
+              "value": "vu9U3hXa3q0AAAABAB5idWlsdGluOm9zLXNlcnZpY2VzLW1vbml0b3JpbmcABnRlbmFudAAGdGVuYW50ACRjOGYwODdiMi1kNDc2LTNmMTItOGZkYS0zMDhlMjk3ZWE5ZTO-71TeFdrerQ"
+            },
+            {
+              "key": "dt.smartscape.host",
+              "value": "HOST-142D7718C1B7E7AA"
+            },
+            {
+              "key": "global_domain",
+              "value": "prprivmgmt.intraxa"
+            },
+            {
+              "key": "global_environment",
+              "value": "Production"
+            },
+            {
+              "key": "host.name",
+              "value": "CAMA1011.PRPRIVMGMT.intraxa"
+            },
+            {
+              "key": "os_services",
+              "value": "OK"
+            },
+            {
+              "key": "owner",
+              "value": "AGO"
+            },
+            {
+              "key": "source",
+              "value": "application"
+            }
+          ],
+          "status": "CLOSED",
+          "correlationId": "f911b1f2ca1a00a1",
+          "entityTags": [
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_AXAGOSCOPE",
+              "value": "True",
+              "stringRepresentation": "AGO_AXAGOSCOPE:True"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_DB",
+              "value": "MSSQL",
+              "stringRepresentation": "AGO_DB:MSSQL"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "TIER",
+              "value": "DB",
+              "stringRepresentation": "TIER:DB"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_AXAATSLEGALENTITY",
+              "value": "AXA-TECH-SPAIN",
+              "stringRepresentation": "AGO_AXAATSLEGALENTITY:AXA-TECH-SPAIN"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_AXAOPCOTRIGRAM",
+              "value": "AES",
+              "stringRepresentation": "AGO_AXAOPCOTRIGRAM:AES"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "TECHNOLOGY",
+              "value": "SQL",
+              "stringRepresentation": "TECHNOLOGY:SQL"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_AXAROLE",
+              "value": "SQL",
+              "stringRepresentation": "AGO_AXAROLE:SQL"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "APP",
+              "value": "PJ",
+              "stringRepresentation": "APP:PJ"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_OS",
+              "value": "Windows",
+              "stringRepresentation": "AGO_OS:Windows"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_Ora_backup",
+              "value": "enhanced",
+              "stringRepresentation": "AGO_Ora_backup:enhanced"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "ENVIRONMENT",
+              "value": "PRO",
+              "stringRepresentation": "ENVIRONMENT:PRO"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_DEFAULT_ASSIGNMENT_GROUP",
+              "value": "DIS-SERV_L2_ITSP",
+              "stringRepresentation": "AGO_DEFAULT_ASSIGNMENT_GROUP:DIS-SERV_L2_ITSP"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AESM_GLOBAL_ENVIRONMENT",
+              "value": "production",
+              "stringRepresentation": "AESM_GLOBAL_ENVIRONMENT:production"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "HostGroup",
+              "value": "PRO_DB_SQL_PJ",
+              "stringRepresentation": "HostGroup:PRO_DB_SQL_PJ"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_AXAENVIRONMENTNAME",
+              "value": "Production",
+              "stringRepresentation": "AGO_AXAENVIRONMENTNAME:Production"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_AXAPATCHENVIRONMENT",
+              "value": "PRODUCTION",
+              "stringRepresentation": "AGO_AXAPATCHENVIRONMENT:PRODUCTION"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_AXAPLATFORM",
+              "value": "POD",
+              "stringRepresentation": "AGO_AXAPLATFORM:POD"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_CSP_REGION",
+              "value": "SE",
+              "stringRepresentation": "AGO_CSP_REGION:SE"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "host",
+              "value": "cama1011",
+              "stringRepresentation": "host:cama1011"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_ALERTING_PRD",
+              "stringRepresentation": "AGO_ALERTING_PRD"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "AGO_Not_AD",
+              "value": "True",
+              "stringRepresentation": "AGO_Not_AD:True"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "Windows",
+              "stringRepresentation": "Windows"
+            },
+            {
+              "context": "CONTEXTLESS",
+              "key": "Arquitectura x86",
+              "stringRepresentation": "Arquitectura x86"
+            }
+          ],
+          "managementZones": [
+            {
+              "id": "2949295338277778772",
+              "name": "AGO_OS_OVERALL_SILVA_ROLLOUT_PRD"
+            },
+            {
+              "id": "1306762949089439866",
+              "name": "[AESM] Produccion"
+            },
+            {
+              "id": "2758958212188616203",
+              "name": "AGO_OS_WIN_PRD"
+            },
+            {
+              "id": "3854002010878131093",
+              "name": "PRUEBA MZ PRODUCCION"
+            },
+            {
+              "id": "1831517544685320887",
+              "name": "[AESM] Produccion_old"
+            },
+            {
+              "id": "-1469080365935282890",
+              "name": "AGO_OS_OVERALL_PRD"
+            },
+            {
+              "id": "8216826790787824850",
+              "name": "ALERTADO PRODUCCION"
+            }
+          ],
+          "underMaintenance": false,
+          "suppressAlert": false,
+          "suppressProblem": false,
+          "frequentEvent": false
+        },
+        "startTime": 1782173100118,
+        "endTime": 1782176919402
+      }
+    ]
+  },
+  "recentComments": {
+    "totalCount": 0,
+    "comments": []
+  },
+  "impactAnalysis": {
+    "impacts": []
+  }
+}

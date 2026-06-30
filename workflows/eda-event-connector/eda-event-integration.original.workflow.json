@@ -1,0 +1,92 @@
+{
+  "id": "8be68b0e-b4fc-4705-a2b2-7a9ecfcbf832",
+  "title": "EDA-Event-Integration",
+  "description": "Workflow basado en eventos Davis para EDA",
+  "actor": "95d9f7f7-9617-4830-8d55-098e664a1bdc",
+  "owner": "95d9f7f7-9617-4830-8d55-098e664a1bdc",
+  "ownerType": "USER",
+  "isPrivate": true,
+  "schemaVersion": 4,
+  "trigger": {
+    "eventTrigger": {
+      "isActive": false,
+      "triggerConfiguration": {
+        "type": "davis-event",
+        "value": {
+          "entityTags": {},
+          "customFilter": "event.kind == \"DAVIS_EVENT\"\nand event.category == \"CUSTOM_ALERT\"\nand event.status == \"ACTIVE\"\nand event.status_transition == \"CREATED\"\n//and (event.name == \"[AESM] [Filenet] custom.filenet.objectstoresp.docs_created_last_hour\"\n//or event.name == \"[AESM] [Filenet] custom.filenet.objectstoreca.docs_created_last_hour\")\n",
+          "onProblemClose": false,
+          "maintenanceWindowTriggerBehavior": "outside",
+          "entityTagsMatch": null
+        }
+      }
+    }
+  },
+  "result": null,
+  "type": "STANDARD",
+  "input": {},
+  "hourlyExecutionLimit": 1000,
+  "guide": null,
+  "tasks": {
+    "run_javascript_1": {
+      "name": "run_javascript_1",
+      "input": {
+        "script": "import { executionsClient } from \"@dynatrace-sdk/client-automation\";\n\nexport default async function main({ execution_id }) {\n\n  // Obtener el contexto de ejecucion via SDK para acceder al evento del trigger\n  let execution;\n  try {\n    execution = await executionsClient.getExecution({ id: execution_id });\n  } catch (e) {\n    throw new Error(`[EDA-Event-Integration] No se pudo obtener la ejecucion ${execution_id}: ${e.message}`);\n  }\n\n  const event = execution.params?.event;\n\n  // Validar campos requeridos antes de continuar\n  const requiredFields = [\"event.id\", \"event.name\", \"event.category\"];\n  const missing = requiredFields.filter(f => event?.[f] == null || event?.[f] === \"\");\n  if (!event || missing.length > 0) {\n    throw new Error(`[EDA-Event-Integration] Campos requeridos ausentes en el evento: ${missing.join(\", \")}`);\n  }\n\n  // Extraer tag especifico del array entity_tags\n  const tags = event[\"entity_tags\"] || [];\n  const getTag = (prefix) => {\n    const match = tags.find(t => t.startsWith(prefix + \":\"));\n    return match ? match.split(\":\").slice(1).join(\":\") : null;\n  };\n\n  try {\n    return {\n      // Identificacion del evento\n      event_id:             event[\"event.id\"],\n      correlation_id:       event[\"dt.event.correlation_id\"] || null,\n\n      // Que paso\n      event_name:           event[\"event.name\"],\n      event_description:    event[\"event.description\"] || null,\n      event_category:       event[\"event.category\"],\n      event_start:          event[\"event.start\"] ? new Date(event[\"event.start\"]).toISOString() : null,\n\n      // Donde paso\n      host_id:              event[\"dt.entity.host\"] || null,\n      host_name:            event[\"dt.entity.host.name\"] || event[\"host.name\"] || null,\n      host_group_id:        event[\"dt.host_group.id\"] || null,\n      host_group_name:      event[\"dt.entity.host_group.name\"] || null,\n      source_entity_type:   event[\"dt.source_entity.type\"] || null,\n      source_entity:        event[\"dt.source_entity\"] || null,\n\n      // Enrutamiento y contexto operacional (extraido de entity_tags)\n      environment:          getTag(\"ENVIRONMENT\"),\n      opco:                 getTag(\"AGO_AXAOPCOTRIGRAM\"),\n      assignment_group:     getTag(\"AGO_DEFAULT_ASSIGNMENT_GROUP\"),\n      platform:             getTag(\"AGO_AXAPLATFORM\"),\n      app:                  getTag(\"AGO_GLOBAL_APP\"),\n      app_service_id:       getTag(\"AGO_GLOBAL_APPSERVICEID\"),\n      patch_environment:    getTag(\"AGO_AXAPATCHENVIRONMENT\"),\n\n      // Control de remediacion\n      timeout_minutes:      event[\"dt.davis.timeout\"] || null,\n      is_under_maintenance: event[\"maintenance.is_under_maintenance\"] || false,\n      impact_level:         event[\"dt.davis.impact_level\"] || null,\n\n      // Trazabilidad hacia Dynatrace\n      problem_ids:          event[\"dt.davis.problems\"] || []\n    };\n  } catch (e) {\n    throw new Error(`[EDA-Event-Integration] Error al construir el payload del evento ${event[\"event.id\"]}: ${e.message}`);\n  }\n}",
+        "sdkMajorVersions": {
+          "@dynatrace-sdk/units": "1",
+          "@dynatrace-sdk/client-hub": "2",
+          "@dynatrace-sdk/client-iam": "1",
+          "@dynatrace-sdk/adhoc-utils": "1",
+          "@dynatrace-sdk/http-client": "1",
+          "@dynatrace-sdk/client-query": "1",
+          "@dynatrace-sdk/shared-errors": "1",
+          "@dynatrace-sdk/error-handlers": "1",
+          "@dynatrace-sdk/app-environment": "1",
+          "@dynatrace-sdk/client-document": "1",
+          "@dynatrace-sdk/automation-utils": "2",
+          "@dynatrace-sdk/user-preferences": "1",
+          "@dynatrace-sdk/client-automation": "8",
+          "@dynatrace-sdk/client-hub-catalog": "0",
+          "@dynatrace-sdk/shared-client-utils": "1",
+          "@dynatrace-sdk/client-resource-store": "1",
+          "@dynatrace-sdk/client-davis-analyzers": "1",
+          "@dynatrace-sdk/client-bucket-management": "3",
+          "@dynatrace-sdk/client-app-engine-registry": "3",
+          "@dynatrace-sdk/client-classic-environment-v1": "2",
+          "@dynatrace-sdk/client-classic-environment-v2": "6",
+          "@dynatrace-sdk/client-app-engine-edge-connect": "1",
+          "@dynatrace-sdk/client-filter-segment-management": "1",
+          "@dynatrace-sdk/client-platform-management-service": "1"
+        }
+      },
+      "action": "dynatrace.automations:run-javascript",
+      "position": {
+        "x": 0,
+        "y": 1
+      },
+      "description": "Run custom JavaScript code.",
+      "predecessors": []
+    },
+    "send_event_to_event-driven-ansible_1": {
+      "name": "send_event_to_event-driven-ansible_1",
+      "input": {
+        "eventData": "{{ result(\"run_javascript_1\") | tojson }}",
+        "connectionId": "vu9U3hXa3q0AAAABADNhcHA6ZHluYXRyYWNlLnJlZGhhdC5hbnNpYmxlOmVkYS13ZWJob29rLmNvbm5lY3Rpb24ABnRlbmFudAAGdGVuYW50ACQwNWYyODU3Yi1mMzkzLTM3NzgtOGQyZC1iMmRjMGFhMmEyZTK-71TeFdrerQ"
+      },
+      "action": "dynatrace.redhat.ansible:send-event-to-eda",
+      "position": {
+        "x": 0,
+        "y": 2
+      },
+      "conditions": {
+        "states": {
+          "run_javascript_1": "OK"
+        }
+      },
+      "description": "Send an event to the Red Hat Event-Driven-Ansible Controller via Event Source Plugin",
+      "predecessors": [
+        "run_javascript_1"
+      ]
+    }
+  }
+}

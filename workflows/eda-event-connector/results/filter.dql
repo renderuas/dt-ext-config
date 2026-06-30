@@ -1,0 +1,11 @@
+(
+event.kind == "DAVIS_EVENT"
+)
+AND (
+event.status_transition == "CREATED"
+)
+AND (
+event.provider == "ONEAGENT"
+OR event.provider == "ANOMALY_DETECTOR"
+OR event.provider == "CUSTOM_ALERT"
+)

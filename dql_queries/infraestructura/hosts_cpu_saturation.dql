@@ -1,0 +1,8 @@
+// Propósito: Detecta hosts con saturación de CPU sostenida en una Management Zone, últimas 2 horas.
+// Parámetros a reemplazar: ${TU_MZ_ID}, ${TU_UMBRAL_CPU}
+// Autor: <nombre> | Fecha: <YYYY-MM-DD>
+
+timeseries avg_cpu = avg(dt.host.cpu.usage), by: { dt.entity.host }, filter: { managementZones contains "${TU_MZ_ID}" }
+| filter avg_cpu > ${TU_UMBRAL_CPU}
+| fields dt.entity.host, avg_cpu
+| sort avg_cpu desc

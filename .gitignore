@@ -1,0 +1,15 @@
+# Archivos de sistema/editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Exports temporales de Dynatrace que no fueron sanitizados todavía
+*.draft.json
+/tmp/
+
+# Tokens
+pat.txt
+
+*.txt

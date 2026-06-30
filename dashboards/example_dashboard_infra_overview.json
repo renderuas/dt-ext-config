@@ -1,0 +1,32 @@
+{
+  "dashboardMetadata": {
+    "name": "Infra Overview - {{ambiente}}",
+    "description": "Overview de hosts e infraestructura. Placeholders a reemplazar antes de importar: ${TU_MZ_ID}, ${TU_HOST_GROUP_ID}, {{ambiente}}.",
+    "owner": "${TU_USUARIO_OWNER}",
+    "managementZoneIds": [
+      "${TU_MZ_ID}"
+    ]
+  },
+  "tiles": [
+    {
+      "name": "CPU saturada por host",
+      "tileType": "dql",
+      "configured": true,
+      "query": "timeseries avg_cpu = avg(dt.host.cpu.usage), by: { dt.entity.host }, filter: { managementZones contains \"${TU_MZ_ID}\" } | sort avg_cpu desc | limit 25",
+      "visualization": "table"
+    },
+    {
+      "name": "Hosts del grupo {{ambiente}}",
+      "tileType": "dql",
+      "configured": true,
+      "query": "fetch dt.entity.host | filter in(belongs_to[dt.entity.host_group], \"${TU_HOST_GROUP_ID}\") | fields entity.name, dt.entity.host",
+      "visualization": "table"
+    },
+    {
+      "name": "Link a dashboard relacionado",
+      "tileType": "markdown",
+      "configured": true,
+      "markdown": "Ver también: [Dashboard de Aplicaciones - {{ambiente}}](${TU_URL_DASHBOARD_RELACIONADO})"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+// Propósito: Cuenta logs de severidad ERROR por servicio, agrupados por hora, en un bucket dado.
+// Parámetros a reemplazar: ${TU_BUCKET_LOGS}, ${TU_NOMBRE_SERVICIO}
+// Autor: <nombre> | Fecha: <YYYY-MM-DD>
+
+fetch logs, from: -24h, bucket: "${TU_BUCKET_LOGS}"
+| filter loglevel == "ERROR" and service.name == "${TU_NOMBRE_SERVICIO}"
+| summarize error_count = count(), by: { bin(timestamp, 1h) }
+| sort timestamp asc

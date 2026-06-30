@@ -1,0 +1,31 @@
+{
+  "title": "Auto-remediacion CPU alta - {{ambiente}}",
+  "description": "Placeholders a reemplazar antes de importar: ${TU_MZ_ID}, ${TU_WEBHOOK_SLACK}, ${TU_CREDENCIAL_VAULT_ID}, {{ambiente}}.",
+  "trigger": {
+    "type": "event",
+    "eventFilter": {
+      "eventType": "CUSTOM_ALERT",
+      "managementZoneId": "${TU_MZ_ID}"
+    }
+  },
+  "tasks": {
+    "query_cpu": {
+      "name": "query_cpu",
+      "action": "dynatrace.automations:run-dql-query",
+      "input": {
+        "query": "timeseries avg_cpu = avg(dt.host.cpu.usage), filter: { managementZones contains \"${TU_MZ_ID}\" }"
+      }
+    },
+    "notify_team": {
+      "name": "notify_team",
+      "action": "dynatrace.automations:http-function",
+      "input": {
+        "url": "${TU_WEBHOOK_SLACK}",
+        "method": "POST",
+        "credentialVaultId": "${TU_CREDENCIAL_VAULT_ID}",
+        "body": "Alerta de CPU en entorno {{ambiente}}: revisar hosts afectados."
+      },
+      "predecessors": ["query_cpu"]
+    }
+  }
+}

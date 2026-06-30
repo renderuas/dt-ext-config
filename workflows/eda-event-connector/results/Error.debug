@@ -1,0 +1,18 @@
+[DEBUG] typeof params: object
+[DEBUG] params keys: ["actionExecutionId","executionId","loopItemValue","action_execution_id","execution_id"]
+[DEBUG] params completo: {
+  "actionExecutionId": "c07cfb7c-669c-4c49-a1bc-81a701bd0231",
+  "executionId": "18c9e159-b760-44a5-a3d4-a5f67b5d781a",
+  "loopItemValue": null,
+  "action_execution_id": "c07cfb7c-669c-4c49-a1bc-81a701bd0231",
+  "execution_id": "18c9e159-b760-44a5-a3d4-a5f67b5d781a"
+}
+[DEBUG] typeof execution (global): undefined
+[DEBUG] params.event: null
+[DEBUG] params.execution.params.event: null
+Error: [EDA-Event-Integration][DEBUG] No se encontro el evento en ningun path conocido. Revisa los logs de debug.
+    at file:///script.ts:32:11
+    at main (file:///script.ts:33:4)
+An error of type UNCAUGHT_EXCEPTION occurred in line 32 (col 11) "    throw new Error("[EDA-Event-Integration][DEBUG] No se encontro el evento en ningun path conocido. Revisa los logs de debug.");": Error: [EDA-Event-Integration][DEBUG] No se encontro el evento en ningun path conocido. Revisa los logs de debug.
+    at file:///script.ts:32:11
+    at main (file:///script.ts:33:4)
