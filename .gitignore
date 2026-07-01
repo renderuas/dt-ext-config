@@ -15,3 +15,8 @@ pat.txt
 *.txt
 
 *.Zone.*
+
+# Archos de skills de Claude
+CLAUDE.md
+dynatrace-sre-playbook.md
+.clauderules
