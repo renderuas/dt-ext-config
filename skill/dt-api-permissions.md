@@ -1,13 +1,23 @@
 # Permisos y Scopes de Tokens en Dynatrace (Acceso Completo)
 
-Dynatrace utiliza un modelo de seguridad basado en tokens de acceso directo. **No necesitas configurar Clientes OAuth** ni registros complejos de cliente para usar el Servidor MCP o las herramientas CLI. En su lugar, puedes generar **Tokens de Acceso (Access Tokens / Platform Tokens)** estándar directamente desde la interfaz web de tu tenant.
+Dynatrace utiliza un modelo de seguridad basado en tokens de acceso directo. **Para el Servidor MCP y `dtctl` no necesitas configurar Clientes OAuth** en la mayoría de casos: basta con generar **Platform Tokens** estándar desde la interfaz web de tu tenant. Para las APIs clásicas y `dt-cli` se usan **Access Tokens clásicos**.
 
-A continuación se detallan los permisos (scopes) necesarios que debes activar al crear tus tokens para poder ejecutar prácticamente cualquier acción mediante API.
+> **Prefijos de token:**
+> - **Platform Token** → empieza por `dt0s16.` (nueva plataforma: Grail, Workflows, MCP, `dtctl`).
+> - **Access Token clásico** → empieza por `dt0c01.` (APIs v1/v2, extensiones, `dt-cli`).
+>
+> **Excepción OAuth:** algunas funciones puntuales (p. ej. las que usan `environment-api:entities:read` para *ownership* de entidades) **solo funcionan con OAuth Client**, no con Platform Token. Para todo lo demás, el Platform Token es suficiente.
+
+A continuación se detallan los scopes necesarios que debes activar al crear tus tokens.
 
 ---
 
 ## 1. Scopes para la Nueva Plataforma (Grail, Workflows y Servidor MCP)
-Estos permisos se configuran al crear un **Platform Token** (o Personal Access Token) en tu tenant de Dynatrace. Son los requeridos por el **Servidor MCP** y la herramienta **`dtctl`**:
+Estos permisos se configuran al crear un **Platform Token** (`dt0s16.…`) en tu tenant. Son los requeridos por el **Servidor MCP** y la herramienta **`dtctl`**:
+
+### Model Context Protocol (MCP Gateway) — requeridos para el MCP Server remoto
+*   `mcp-gateway:servers:invoke` - Requerido para invocar los servidores MCP (transporte SSE/streamable-http).
+*   `mcp-gateway:servers:read` - Requerido para leer la configuración de los servidores MCP.
 
 ### Telemetría y Grail (Lectura de Datos)
 *   `storage:logs:read` - Permite consultar logs en Grail.
@@ -35,18 +45,20 @@ Estos permisos se configuran al crear un **Platform Token** (o Personal Access T
 *   `settings:objects:write` - Modificación de configuraciones del tenant.
 *   `settings:schemas:read` - Lectura de esquemas de configuración disponibles.
 
-### Model Context Protocol (MCP Gateway) & Inteligencia Artificial (Davis)
-*   `mcp-gateway:servers:invoke` - Requerido para poder invocar servidores MCP.
-*   `mcp-gateway:servers:read` - Requerido para leer la configuración de servidores MCP.
+### Inteligencia Artificial (Davis / Copilot)
 *   `davis-copilot:conversations:execute` - Permite al MCP utilizar el "Help Agent" para resolver preguntas generales de Dynatrace.
-*   `davis-copilot:nl2dql:execute` - Permite al MCP traducir lenguaje natural a consultas DQL de Grail.
-*   `davis-copilot:dql2nl:execute` - Permite al MCP explicar consultas DQL complejas en lenguaje natural.
+*   `davis-copilot:nl2dql:execute` - Permite traducir lenguaje natural a consultas DQL de Grail.
+*   `davis-copilot:dql2nl:execute` - Permite explicar consultas DQL complejas en lenguaje natural.
 *   `davis:analyzers:read` y `davis:analyzers:execute` - Permiten interactuar y ejecutar diagnósticos de Davis Analyzer.
+    *   *Nota: verifica el nombre exacto de estos scopes de Davis en tu tenant, ya que su nomenclatura ha variado entre versiones.*
+
+### Solo con OAuth Client (no disponible con Platform Token)
+*   `environment-api:entities:read` - Detalles de *ownership* de entidades monitorizadas. **Requiere OAuth Client.**
 
 ---
 
 ## 2. Scopes para APIs Clásicas (V1 y V2 APIs)
-Estos permisos se configuran en los **Access Tokens** clásicos. Son los requeridos por la herramienta de extensiones **`dt-cli`** y scripts de monitorización tradicionales:
+Estos permisos se configuran en los **Access Tokens** clásicos (`dt0c01.…`). Son los requeridos por la herramienta de extensiones **`dt-cli`** y scripts de monitorización tradicionales:
 
 ### Lectura de Telemetría (Read Scopes)
 *   `entities.read` - Lectura de topología (Hosts, Process Groups, Services, Applications).
