@@ -1,0 +1,6 @@
+//queryId=apache-threads-active
+ timeseries avg(dt.runtime.apache.threads.active), by:{dt.entity.process_group_instance},filter:dt.entity.process_group_instance=="PROCESS_GROUP_INSTANCE-EDFA7D4916839149" | fieldsAdd metricName = "Active worker threads"
+| append[//queryId=apache-threads-idle
+ timeseries avg(dt.runtime.apache.threads.idle), by:{dt.entity.process_group_instance},filter:dt.entity.process_group_instance=="PROCESS_GROUP_INSTANCE-EDFA7D4916839149" | fieldsAdd metricName = "Idle worker threads"]
+| append[//queryId=apache-threads-max
+ timeseries avg(dt.runtime.apache.threads.max), by:{dt.entity.process_group_instance},filter:dt.entity.process_group_instance=="PROCESS_GROUP_INSTANCE-EDFA7D4916839149" | fieldsAdd metricName = "Maximum worker threads"]
