@@ -13,8 +13,11 @@
       "triggerConfiguration": {
         "type": "davis-problem",
         "value": {
-          "entityTags": {},
-          "entityTagsMatch": null,
+          "entityTags": {
+            "ENVIRONMENT": "PRO",
+            "AESM_GLOBAL_ENVIRONMENT": "production"
+          },
+          "entityTagsMatch": "any",
           "onProblemClose": false,
           "analysisReady": false,
           "categories": {

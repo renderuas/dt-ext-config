@@ -1,0 +1,84 @@
+{
+  "id": "a1f2e3d4-5b6c-7d8e-9f0a-1b2c3d4e5f6a",
+  "title": "Dynatrace to ServiceNow - DIS-APL_L2_ITSP - Stage v2",
+  "description": "",
+  "actor": "95d9f7f7-9617-4830-8d55-098e664a1bdc",
+  "owner": "95d9f7f7-9617-4830-8d55-098e664a1bdc",
+  "ownerType": "USER",
+  "isPrivate": true,
+  "schemaVersion": 4,
+  "trigger": {
+    "eventTrigger": {
+      "isActive": false,
+      "triggerConfiguration": {
+        "type": "davis-problem",
+        "value": {
+          "categories": {
+            "custom": true
+          },
+          "entityTags": {
+            "ENVIRONMENT": "PRO",
+            "AESM_GLOBAL_ENVIRONMENT": "production"
+          },
+          "customFilter": "problem.title == \"DT-SILVA-TEST-POC\"\nand (maintenance.is_under_maintenance == false\nor isNull(maintenance.is_under_maintenance))\n",
+          "analysisReady": false,
+          "onProblemClose": false,
+          "entityTagsMatch": "any",
+          "triggerOnUpdateFields": [],
+          "problemOpenDuration": null
+        }
+      }
+    }
+  },
+  "result": null,
+  "type": "STANDARD",
+  "input": {},
+  "hourlyExecutionLimit": 1000,
+  "guide": null,
+  "tasks": {
+    "post_silva": {
+      "name": "post_silva",
+      "input": {
+        "url": "https://silvastg.service-now.com/api/now/table/incident",
+        "method": "POST",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "payload": "{\n  \"active\": true,\n  \"correlation_display\": \"Dynatrace\",\n  \"correlation_id\": \"{{ result('severity_mapping').problemId }}\",\n  \"u_vendor_interface\": \"DYNATRACE\",\n  \"assignment_group\": \"DIS-APL_L2_ITSP\",\n  \"u_business_service\": \"Pandora - Servicio de Monitorizacion\",\n  \"caller_id\": \"Tech_AGOS Pandora_INC_WS\",\n  \"category\": \"Application\",\n  \"company\": \"AXA SEGUROS SPAIN\",\n  \"location\": \"Spain_[Country]\",\n  \"service_offering\": \"Pandora - Servicio de Monitorizacion - AXA SEGUROS SPAIN - Production - Standard\",\n  \"subcategory\": \"Other\",\n  \"incident_state\": \"New\",\n  \"impact\": \"{{ result('severity_mapping').impactLabel }}\",\n  \"urgency\": \"{{ result('severity_mapping').urgencyLabel }}\",\n  \"priority\": \"{{ result('severity_mapping').priorityLabel }}\",\n  \"u_routing_priority\": \"{{ result('severity_mapping').routingPriority }}\",\n  \"short_description\": \"[ALERTA DYNATRACE] [DYNATRACE] {{ result('severity_mapping').title }}\",\n  \"description\": \"Grupo: DIS-APL_L2_ITSP\\nTexto Evento: {{ result('severity_mapping').title }}\\nDetection Time: {{ result('severity_mapping').detTime }}\\nSeverity: {{ result('severity_mapping').severity }}\\nURL: {{ result('severity_mapping').url }}\\n\\n[ALERTA AUTOGENERADA]\"\n}",
+        "credential": {
+          "type": "basic",
+          "credentialId": "CREDENTIALS_VAULT-4397946301328227"
+        },
+        "failOnResponseCodes": "400-599"
+      },
+      "action": "dynatrace.automations:http-function",
+      "position": {
+        "x": 0,
+        "y": 2
+      },
+      "conditions": {
+        "states": {
+          "severity_mapping": "OK"
+        }
+      },
+      "description": "Issue an HTTP request to any API.",
+      "predecessors": [
+        "severity_mapping"
+      ]
+    },
+    "severity_mapping": {
+      "name": "severity_mapping",
+      "input": {
+        "script": "import { execution } from '@dynatrace-sdk/automation-utils';\n\nexport default async function ({ execution_id }) {\n  const ex = await execution(execution_id);\n\n  // Manual: ex.params.event.params | Davis trigger: ex.event\n  const src = ex.params?.event?.params || ex.event || {};\n  console.log('source data:', JSON.stringify(src));\n\n  const severity   = src['problem.severityLevel'] || 'OTHER';\n  const problemId  = src['problem.id']             || 'P-MANUAL-TEST';\n  const title      = src['problem.title']          || 'Manual Test';\n  const detTime    = src['problem.detectionTime']  || new Date().toISOString();\n  const url        = src['problem.url']            || '';\n\n  let impact = '4';\n  let urgency = '4';\n  if (severity === 'AVAILABILITY') { impact = '1'; urgency = '1'; }\n  else if (severity === 'INFRASTRUCTURE') { impact = '2'; urgency = '2'; }\n  else if (severity === 'PERFORMANCE') { impact = '2'; urgency = '2'; }\n  else if (severity === 'RESOURCE') { impact = '3'; urgency = '3'; }\n  else if (severity === 'CUSTOM_ALERT') { impact = '4'; urgency = '4'; }\n\n  const impactLabel = `${impact} - ${impact === '1' ? 'High' : impact === '2' ? 'Medium' : impact === '3' ? 'Low' : 'Low'}`;\n  const urgencyLabel = `${urgency} - ${urgency === '1' ? 'High' : urgency === '2' ? 'Medium' : urgency === '3' ? 'Low' : 'Low'}`;\n  const priorityLabel = `${impact} - ${impact === '1' ? 'High' : impact === '2' ? 'Medium' : impact === '3' ? 'Low' : 'Low'}`;\n\n  return {\n    impact,\n    urgency,\n    impactLabel,\n    urgencyLabel,\n    priorityLabel,\n    routingPriority: impact,\n    problemId,\n    title,\n    severity,\n    detTime,\n    url\n  };\n}"
+      },
+      "action": "dynatrace.automations:run-javascript",
+      "position": {
+        "x": 0,
+        "y": 1
+      },
+      "description": "Run custom JavaScript code.",
+      "predecessors": []
+    }
+  }
+}
