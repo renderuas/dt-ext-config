@@ -1,0 +1,57 @@
+Number
+INC29832456
+Caller
+Tech_AGOS Pandora_INC_WS
+Show Related RITMs
+Add me
+Assigned CI
+On Behalf Of
+Tech_AGOS Pandora_INC_WS
+Show Related RITMs
+Assigned CI
+Business service
+Pandora - Servicio de Monitorizacion
+Impact
+
+4 - Low
+Urgency
+
+4 - Low
+Short description
+[ALERTA DYNATRACE] [DYNATRACE] Manual Test
+Summary
+Grupo: DIS-APL_L2_ITSP
+Texto Evento: Manual Test
+Detection Time: 2026-07-01T07:32:09.625Z
+Severity: OTHER
+URL: 
+
+[ALERTA AUTOGENERADA]
+Additional comments (Customer visible)
+Additional comments (Customer visible)
+Activities: 1
+TA
+Tech_SEGSPAIN Ansible_CMDB_WS
+Field changes•01/07/2026 09:32:11
+Activetrue
+Assignment groupDIS-APL_L2_ITSP
+Business servicePandora - Servicio de Monitorizacion
+CallerTech_AGOS Pandora_INC_WS
+CategoryApplication
+CompanyAXA SEGUROS SPAIN
+DomainTOP/Golden Copy/SHARED
+Hot Ticketfalse
+Impact4 - Low
+Incident StateNew
+LocationSpain_[Country]
+Lookup B ServicePandora - Servicio de Monitorizacion
+Opened01/07/2026 09:32:10
+Owner GroupSERVICE-DESK_L1_ITSP
+Priority4 - Low
+Reported on01/07/2026 09:32:10
+Routing Priority4
+Service OfferingPandora - Servicio de Monitorizacion - AXA SEGUROS SPAIN - Production - Standard
+Short description[ALERTA DYNATRACE] [DYNATRACE] Manual Test
+SubcategoryOther
+Urgency4 - Low
+Vendor / InterfaceDYNATRACE

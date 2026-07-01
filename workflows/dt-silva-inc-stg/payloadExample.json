@@ -1,0 +1,130 @@
+{
+  "event.id": "6566993629599333850_1782886380000V2",
+  "host.name": [
+    "zpaesa0058.PRPRIVMGMT.intraxa"
+  ],
+  "timestamp": "2026-07-01T07:08:00.768000000Z",
+  "display_id": "P-2607201",
+  "event.kind": "DAVIS_PROBLEM",
+  "event.name": "[AESM] Consumo de memoria alto en host zpaesa0058.PRPRIVMGMT.intraxa",
+  "entity_tags": [
+    "AESM_GLOBAL_APP:Procesos-Batch",
+    "AESM_GLOBAL_APP:procesos-batch",
+    "AESM_GLOBAL_ENVIRONMENT:Production",
+    "AESM_GLOBAL_ENVIRONMENT:production",
+    "AESM_GLOBAL_RECOVERY_CLASS:gold",
+    "AGO_ALERTING_PRD",
+    "AGO_AXAATSLEGALENTITY:AXA-SEGUROS-SPAIN",
+    "AGO_AXAENVIRONMENTNAME:Production",
+    "AGO_AXAGOSCOPE:True",
+    "AGO_AXAOPCOTRIGRAM:AES",
+    "AGO_AXAPATCHENVIRONMENT:PRODUCTION",
+    "AGO_AXAPLATFORM:AZURE_IAAS",
+    "AGO_AXAROLE:BASE",
+    "AGO_CSP_REGION:WESTEUROPE",
+    "AGO_DEFAULT_ASSIGNMENT_GROUP:DIS-SERV_L2_ITSP",
+    "AGO_GLOBAL_APP:Procesos-Batch",
+    "AGO_GLOBAL_APPSERVICEID:70eaaf3adbe603080dbda3e84b96192d",
+    "AGO_Not_AD:True",
+    "AGO_OS:Windows",
+    "AGO_Ora_backup:elevated",
+    "APP:PROCESOS",
+    "Arquitectura x86",
+    "ENVIRONMENT:PRO",
+    "HostGroup:PRO_BATCH_ALL_PROCESOS",
+    "TECHNOLOGY:ALL",
+    "TIER:BATCH",
+    "Vulnerability test:apps-set-java",
+    "Windows",
+    "[Azure]Last Backup:06/30/2026, 10\\:28\\:42 PM",
+    "[Azure]global-app:Procesos_Batch",
+    "[Azure]global-appserviceid:70eaaf3adbe603080dbda3e84b96192d",
+    "[Azure]global-cbp:A02133",
+    "[Azure]global-dataclass:Internal",
+    "[Azure]global-dcs:AXA Seguros Spain",
+    "[Azure]global-env:Production",
+    "[Azure]global-opco:aes",
+    "[Azure]global-project:Exit Core IT",
+    "[Azure]global-techserviceid:c19d9c3a1bec8994e3e66574604bcbee",
+    "[Azure]local-configuration:{\"license\"\\:\"Windows_Server\",\"os\"\\:\"Windows\",\"role\"\\:\"base\",\"support_resource_group\"\\:\"z-aes-support-pr01-ew1-01\",\"zones\"\\:\"1\\:2\"}",
+    "[Azure]local-configuration_backup:{\"policy\"\\:\"elevated\",\"replicationtype\"\\:\"geo\"}",
+    "[Azure]local-configuration_disks:{\"data_disks\"\\:2,\"data_disksize\"\\:132,\"os_disk_name\"\\:\"zaespbatpr01003_OSDisk\"}",
+    "[Azure]local-configuration_network:{\"exposure\"\\:\"internal\",\"source_address\"\\:\"100.113.242.142\",\"subnet\"\\:\"prd-int-main-pic-rt\",\"vnet\"\\:\"zaesintspkpr01ew1net01\"}",
+    "[Azure]local-configuration_recovery:{\"capacity\"\\:\"zaespbatpr01ew1crg90\",\"class\"\\:\"Gold\",\"source_location\"\\:\"westeurope\",\"vault\"\\:\"z-aes-support-pr01-ew1-01/zaessupportpr01ew1rsv90\"}",
+    "[Azure]local-creation-year:2024",
+    "[Azure]local-deployment:{\"flow_type\"\\:\"Standard\",\"moduleversion\"\\:\"5.0.3\",\"source\"\\:\"New\",\"usage\"\\:\"Apps\"}",
+    "[Azure]local-purpose:MPI",
+    "[Azure]local-silva_internal_id:041830",
+    "[Azure]local-sow:500090",
+    "[Azure]local-vmfqdn:zpaesa0058.prprivmgmt.intraxa",
+    "[Azure]local-vmprovisioning:activity-orchreport-succeeded-iteration1",
+    "[Azure]local-vmprovisioningid:20241001-105732",
+    "[Azure]local-vmprovisioninginfo",
+    "[Azure]local-vmpuppetstatus:succeeded",
+    "[Azure]local-vmstatus:Provisioned",
+    "[Azure]local_tags:{\"dr_enable\"\\:\"no\",\"dr_priority\"\\:\"1\",\"dr_role\"\\:\"appgold\"}",
+    "host:zpaesa0058"
+  ],
+  "event.start": "2026-07-01T06:49:00.000000000Z",
+  "event.status": "ACTIVE",
+  "dt.entity.host": [
+    "HOST-928FEA5F8E5C1A3B"
+  ],
+  "event.category": "CUSTOM_ALERT",
+  "event.severity": "3",
+  "dt.host_group.id": [
+    "PRO_BATCH_ALL_PROCESOS"
+  ],
+  "dt.analysis.ready": true,
+  "event.description": "# [AESM] Consumo de memoria alto en host zpaesa0058.PRPRIVMGMT.intraxa\n\nThe problem **affects 1 entity** overall.\n\nFollowing entities were affected by the problem:\n\n**Host, zpaesa0058.PRPRIVMGMT.intraxa**\n\nCustom: [AESM] Consumo de memoria alto en host zpaesa0058.PRPRIVMGMT.intraxa\n\n- ❗**Alert description:**\nConsumo de memoria por encima de 95 %. Within the sliding window, 46 violation samples were detected that were above the threshold of 95.",
+  "dt.analysis.offset": "-2160000000000",
+  "dt.davis.event_ids": [
+    "6566993629599333850_1782886380000"
+  ],
+  "dt.duration_marker": "900000000000",
+  "related_entity_ids": [
+    "HOST_GROUP-265EC145DE2BF311"
+  ],
+  "affected_entity_ids": [
+    "HOST-928FEA5F8E5C1A3B"
+  ],
+  "dt.security_context": [
+    "PRO_BATCH_ALL_PROCESOS"
+  ],
+  "azure.resource.group": [
+    "z-aes-pbat-pr01-ew1-01"
+  ],
+  "dt.davis.mute.status": "NOT_MUTED",
+  "dt.entity.host_group": [
+    "HOST_GROUP-265EC145DE2BF311"
+  ],
+  "related_entity_names": [
+    "PRO_BATCH_ALL_PROCESOS"
+  ],
+  "affected_entity_names": [
+    "zpaesa0058.PRPRIVMGMT.intraxa"
+  ],
+  "affected_entity_types": [
+    "dt.entity.host"
+  ],
+  "dt.davis.impact_level": [
+    "Infrastructure"
+  ],
+  "dt.davis.is_duplicate": false,
+  "dt.openpipeline.source": "classic_root_cause_analysis",
+  "event.status_transition": "CREATED",
+  "labels.alerting_profile": [
+    "AlertasProd",
+    "AESM_AlertasProd",
+    "[AGO.INFRA.SILVA.PRD]",
+    "[AESM] Alertas_24x7_PRUEBAS_PRO",
+    "[AESM] Produccion",
+    "Alertas proactivas",
+    "AESM_Monitoring"
+  ],
+  "dt.openpipeline.pipelines": [
+    "davis.problems:default"
+  ],
+  "dt.davis.is_frequent_event": false,
+  "maintenance.is_under_maintenance": false
+}
