@@ -1,0 +1,65 @@
+{
+  "error": {
+    "message": "PARSE_ERROR",
+    "details": {
+      "exceptionType": "DQL-ERROR-PARSING",
+      "errorType": "PARSE_ERROR",
+      "errorMessage": "`PRO` isn't allowed here. Please check the autocomplete suggestions before the error for alternative options.",
+      "arguments": [
+        "`PRO`"
+      ],
+      "queryString": "fetch dt.entity.service | fields tags | filter arrayContains(tags, concat(\"ENVIRONMENT:\", \"\"PRO\"\")) | expand tags | filter startsWith(tags, \"APP:\") | fieldsAdd app = replaceString(tags, \"APP:\", \"\") | filter isNotNull(app) and app != \"\" | summarize count(), by: { app } | fields value = app | sort value asc | append [ data record(value = \"ALL\") ]",
+      "errorMessageFormatSpecifierTypes": [
+        "INPUT_QUERY_PART"
+      ],
+      "errorMessageFormat": "%1$s isn't allowed here. Please check the autocomplete suggestions before the error for alternative options.",
+      "queryId": "2e6012ba-9982-4271-8a2b-f90d761fbbb3",
+      "syntaxErrorPosition": {
+        "start": {
+          "column": 93,
+          "index": 92,
+          "line": 1
+        },
+        "end": {
+          "column": 95,
+          "index": 94,
+          "line": 1
+        }
+      }
+    },
+    "code": 400
+  }
+}
+
+{
+  "error": {
+    "message": "PARSE_ERROR",
+    "details": {
+      "exceptionType": "DQL-ERROR-PARSING",
+      "errorType": "PARSE_ERROR",
+      "errorMessage": "`PRO` isn't allowed here. Please check the autocomplete suggestions before the error for alternative options.",
+      "arguments": [
+        "`PRO`"
+      ],
+      "queryString": "fetch dt.entity.service | fields id, entity.name, tags | filter arrayContains(tags, concat(\"ENVIRONMENT:\", \"\"PRO\"\")) | filter \"\"ALL\"\" == \"ALL\" or arrayContains(tags, concat(\"APP:\", \"\"ALL\"\")) | fields value = toString(id), service_name = entity.name | dedup value | sort service_name asc | append [ data record(value = \"ALL\", service_name = \"ALL\") ]",
+      "errorMessageFormatSpecifierTypes": [
+        "INPUT_QUERY_PART"
+      ],
+      "errorMessageFormat": "%1$s isn't allowed here. Please check the autocomplete suggestions before the error for alternative options.",
+      "queryId": "1fc4a83d-58fb-49fc-9213-b674593f7c84",
+      "syntaxErrorPosition": {
+        "start": {
+          "column": 110,
+          "index": 109,
+          "line": 1
+        },
+        "end": {
+          "column": 112,
+          "index": 111,
+          "line": 1
+        }
+      }
+    },
+    "code": 400
+  }
+}
