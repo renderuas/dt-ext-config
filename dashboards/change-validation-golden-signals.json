@@ -7,26 +7,28 @@
       "type": "query",
       "visible": true,
       "editable": true,
-      "input": "fetch dt.entity.service | expand tags | filter startsWith(tags, \"AESM_GLOBAL_ENVIRONMENT:\") | fieldsAdd environment = replaceString(tags, \"AESM_GLOBAL_ENVIRONMENT:\", \"\") | summarize count(), by: { environment } | fields environment | sort environment asc",
+      "input": "fetch dt.entity.service | expand tags | filter startsWith(tags, \"ENVIRONMENT:\") | fieldsAdd environment = replaceString(tags, \"ENVIRONMENT:\", \"\") | filter isNotNull(environment) and environment != \"\" | summarize count(), by: { environment } | fields environment | sort environment asc",
       "multiple": false
     },
     {
+      "version": 2,
       "key": "app",
-      "visible": true,
       "type": "query",
-      "version": 2,
+      "visible": true,
       "editable": true,
-      "input": "fetch dt.entity.host\n| fields id, tags, osType\n| expand tags\n| filter startsWith(tags, \"AESM_GLOBAL_ENVIRONMENT:\")\n| parse tags, \"'AESM_GLOBAL_ENVIRONMENT:' DATA:entorno_value\"\n| filter $environment == \"ALL\" or lower(entorno_value) == lower($environment)\n| dedup id\n| lookup [\n    fetch dt.entity.host\n    | fields id, tags\n    | expand tags\n    | filter startsWith(tags, \"AESM_GLOBAL_APP:\")\n    | parse tags, \"'AESM_GLOBAL_APP:' LD:value\"\n    | filter isNotNull(value)\n    | dedup id\n], sourceField:id, lookupField:id, prefix:\"app.\"\n| filter isNotNull(app.value)\n| fields value = lower(app.value)\n| dedup value\n| append [\n    data record(value = \"ALL\")\n]\n| dedup value\n| sort value asc",
-      "multiple": false
+      "input": "fetch dt.entity.service | fields tags | filter arrayContains(tags, concat(\"ENVIRONMENT:\", \"$environment\")) | expand tags | filter startsWith(tags, \"APP:\") | fieldsAdd app = replaceString(tags, \"APP:\", \"\") | filter isNotNull(app) and app != \"\" | summarize count(), by: { app } | fields value = app | sort value asc | append [ data record(value = \"ALL\") ]",
+      "multiple": false,
+      "defaultValue": "ALL"
     },
     {
-      "key": "service",
-      "visible": true,
-      "type": "query",
       "version": 2,
+      "key": "service",
+      "type": "query",
+      "visible": true,
       "editable": true,
-      "input": "fetch dt.entity.service\n| fields id, entity.name, tags\n| expand tags\n| filter startsWith(tags, \"APP:\")\n| filter $app == \"ALL\" or tags == concat(\"APP:\", $app)\n| fields id, entity.name\n| dedup id, entity.name\n| filter $environment == \"ALL\"// or isNotNull(env_id)\n| fields value = toString(id), service_name = entity.name\n| dedup value, service_name\n| append [data record(value = \"ALL\", service_name = \"ALL\")]\n| dedup value, service_name\n| sort service_name asc",
-      "multiple": true
+      "input": "fetch dt.entity.service | fields id, entity.name, tags | filter arrayContains(tags, concat(\"ENVIRONMENT:\", \"$environment\")) | filter \"$app\" == \"ALL\" or arrayContains(tags, concat(\"APP:\", \"$app\")) | fields value = toString(id), service_name = entity.name | dedup value | sort service_name asc | append [ data record(value = \"ALL\", service_name = \"ALL\") ]",
+      "multiple": true,
+      "defaultValue": "ALL"
     },
     {
       "version": 2,
@@ -42,48 +44,48 @@
   "tiles": {
     "0": {
       "type": "markdown",
-      "content": "# Validacion de cambios - 4 señales de oro (SRE)\n\n**Entorno:** `$environment`  |  **App:** `$app`  |  **Servicios:** `$service`  |  **Ventana:** `$timeframe` actual vs `$timeframe` anterior\n\nSe compara la ventana actual (`-$timeframe` -> ahora) contra el periodo inmediatamente anterior del mismo tamano.\n\n| Señal | Metrica | WARN | CRITICO |\n|---|---|---|---|\n| **Errores** | Fail rate (pp de dif) | Δ > 0.5 pp | Δ > 2 pp  o  fail actual > 5% |\n| **Latencia** | p90 (% de dif) | Δ > 10% | Δ > 30% |\n| **Trafico** | throughput (% de dif) | \\|Δ\\| > 20% | \\|Δ\\| > 50% |\n| **Saturacion** | p99 tail latency (% dif) | Δ > 10% | Δ > 30% |\n\n**Veredicto:** GO (todo OK) · REVISAR (algun WARN) · NO-GO (algun CRITICO).",
-      "title": ""
+      "title": "",
+      "content": "# Validacion de cambios - 4 señales de oro (SRE)\n\n**Entorno:** `$environment`  |  **App:** `$app`  |  **Servicios:** `$service`  |  **Ventana:** `$timeframe` actual vs `$timeframe` anterior\n\nSe compara la ventana actual (`-$timeframe` -> ahora) contra el periodo inmediatamente anterior del mismo tamano. `ALL` = sin filtro.\n\n| Señal | Metrica | WARN | CRITICO |\n|---|---|---|---|\n| **Errores** | Fail rate (pp de dif) | Δ > 0.5 pp | Δ > 2 pp  o  fail actual > 5% |\n| **Latencia** | p90 (% de dif) | Δ > 10% | Δ > 30% |\n| **Trafico** | throughput (% de dif) | \\|Δ\\| > 20% | \\|Δ\\| > 50% |\n| **Saturacion** | p99 tail latency (% dif) | Δ > 10% | Δ > 30% |\n\n**Veredicto:** GO (todo OK) · REVISAR (algun WARN) · NO-GO (algun CRITICO)."
     },
     "1": {
-      "title": "Veredicto por servicio - 4 señales de oro (actual vs anterior)",
       "type": "data",
-      "query": "timeseries { reqs = sum(dt.service.request.count), fails = sum(dt.service.request.failure_count), p90 = percentile(dt.service.request.response_time, 90), p99 = percentile(dt.service.request.response_time, 99), p50 = percentile(dt.service.request.response_time, 50) }, by: { dt.entity.service }, from: now() - $timeframe, to: now(), interval: $timeframe | fieldsAdd svc = entityName(dt.entity.service) | filter in(svc, $service) | fieldsAdd reqs_cur = reqs[0], fails_cur = fails[0], p90_cur_ms = p90[0] / 1000.0, p99_cur_ms = p99[0] / 1000.0, p50_cur_ms = p50[0] / 1000.0 | fieldsAdd fr_cur = if(reqs_cur > 0, 100.0 * fails_cur / reqs_cur, else: 0.0) | fields svc, reqs_cur, fr_cur, p90_cur_ms, p99_cur_ms, p50_cur_ms | join [ timeseries { reqs = sum(dt.service.request.count), fails = sum(dt.service.request.failure_count), p90 = percentile(dt.service.request.response_time, 90), p99 = percentile(dt.service.request.response_time, 99) }, by: { dt.entity.service }, from: now() - $timeframe - $timeframe, to: now() - $timeframe, interval: $timeframe | fieldsAdd svc = entityName(dt.entity.service) | filter in(svc, $service) | fieldsAdd reqs_prev = reqs[0], fails_prev = fails[0], p90_prev_ms = p90[0] / 1000.0, p99_prev_ms = p99[0] / 1000.0 | fieldsAdd fr_prev = if(reqs_prev > 0, 100.0 * fails_prev / reqs_prev, else: 0.0) | fields svc, reqs_prev, fr_prev, p90_prev_ms, p99_prev_ms ], kind: leftOuter, on: { svc } | fieldsAdd delta_fail_pp = fr_cur - fr_prev, delta_p90_pct = if(p90_prev_ms > 0, 100.0 * (p90_cur_ms - p90_prev_ms) / p90_prev_ms, else: 0.0), delta_p99_pct = if(p99_prev_ms > 0, 100.0 * (p99_cur_ms - p99_prev_ms) / p99_prev_ms, else: 0.0), delta_tput_pct = if(reqs_prev > 0, 100.0 * (reqs_cur - reqs_prev) / reqs_prev, else: 0.0) | fieldsAdd sev_err = if(fr_cur > 5.0 or delta_fail_pp > 2.0, 2, else: if(delta_fail_pp > 0.5, 1, else: 0)), sev_lat = if(delta_p90_pct > 30.0, 2, else: if(delta_p90_pct > 10.0, 1, else: 0)), sev_tra = if(abs(delta_tput_pct) > 50.0, 2, else: if(abs(delta_tput_pct) > 20.0, 1, else: 0)), sev_sat = if(delta_p99_pct > 30.0, 2, else: if(delta_p99_pct > 10.0, 1, else: 0)) | fieldsAdd estado_errores = if(sev_err == 2, \"CRITICO\", else: if(sev_err == 1, \"WARN\", else: \"OK\")), estado_latencia = if(sev_lat == 2, \"CRITICO\", else: if(sev_lat == 1, \"WARN\", else: \"OK\")), estado_trafico = if(sev_tra == 2, \"CRITICO\", else: if(sev_tra == 1, \"WARN\", else: \"OK\")), estado_saturacion = if(sev_sat == 2, \"CRITICO\", else: if(sev_sat == 1, \"WARN\", else: \"OK\")) | fieldsAdd sev_max = arrayMax(array(sev_err, sev_lat, sev_tra, sev_sat)) | fieldsAdd veredicto = if(sev_max >= 2, \"NO-GO\", else: if(sev_max == 1, \"REVISAR\", else: \"GO\")) | sort sev_max desc, delta_fail_pp desc | fields veredicto, svc, estado_errores, fr_cur, fr_prev, delta_fail_pp, estado_latencia, p90_cur_ms, p90_prev_ms, delta_p90_pct, estado_trafico, reqs_cur, reqs_prev, delta_tput_pct, estado_saturacion, p99_cur_ms, p99_prev_ms, delta_p99_pct, p50_cur_ms",
+      "title": "Veredicto por servicio - 4 señales de oro (actual vs anterior)",
+      "query": "timeseries { reqs = sum(dt.service.request.count), fails = sum(dt.service.request.failure_count), p90 = percentile(dt.service.request.response_time, 90), p99 = percentile(dt.service.request.response_time, 99), p50 = percentile(dt.service.request.response_time, 50) }, by: { dt.entity.service }, from: now() - $timeframe, to: now(), interval: $timeframe | filter in(\"ALL\", $service) or in(dt.entity.service, $service) | fieldsAdd svc = entityName(dt.entity.service) | fieldsAdd reqs_cur = reqs[0], fails_cur = fails[0], p90_cur_ms = p90[0] / 1000.0, p99_cur_ms = p99[0] / 1000.0, p50_cur_ms = p50[0] / 1000.0 | fieldsAdd fr_cur = if(reqs_cur > 0, 100.0 * fails_cur / reqs_cur, else: 0.0) | fields dt.entity.service, svc, reqs_cur, fr_cur, p90_cur_ms, p99_cur_ms, p50_cur_ms | join [ timeseries { reqs = sum(dt.service.request.count), fails = sum(dt.service.request.failure_count), p90 = percentile(dt.service.request.response_time, 90), p99 = percentile(dt.service.request.response_time, 99) }, by: { dt.entity.service }, from: now() - $timeframe - $timeframe, to: now() - $timeframe, interval: $timeframe | filter in(\"ALL\", $service) or in(dt.entity.service, $service) | fieldsAdd reqs_prev = reqs[0], fails_prev = fails[0], p90_prev_ms = p90[0] / 1000.0, p99_prev_ms = p99[0] / 1000.0 | fieldsAdd fr_prev = if(reqs_prev > 0, 100.0 * fails_prev / reqs_prev, else: 0.0) | fields dt.entity.service, reqs_prev, fr_prev, p90_prev_ms, p99_prev_ms ], kind: leftOuter, on: { dt.entity.service } | fieldsAdd delta_fail_pp = fr_cur - fr_prev, delta_p90_pct = if(p90_prev_ms > 0, 100.0 * (p90_cur_ms - p90_prev_ms) / p90_prev_ms, else: 0.0), delta_p99_pct = if(p99_prev_ms > 0, 100.0 * (p99_cur_ms - p99_prev_ms) / p99_prev_ms, else: 0.0), delta_tput_pct = if(reqs_prev > 0, 100.0 * (reqs_cur - reqs_prev) / reqs_prev, else: 0.0) | fieldsAdd sev_err = if(fr_cur > 5.0 or delta_fail_pp > 2.0, 2, else: if(delta_fail_pp > 0.5, 1, else: 0)), sev_lat = if(delta_p90_pct > 30.0, 2, else: if(delta_p90_pct > 10.0, 1, else: 0)), sev_tra = if(abs(delta_tput_pct) > 50.0, 2, else: if(abs(delta_tput_pct) > 20.0, 1, else: 0)), sev_sat = if(delta_p99_pct > 30.0, 2, else: if(delta_p99_pct > 10.0, 1, else: 0)) | fieldsAdd estado_errores = if(sev_err == 2, \"CRITICO\", else: if(sev_err == 1, \"WARN\", else: \"OK\")), estado_latencia = if(sev_lat == 2, \"CRITICO\", else: if(sev_lat == 1, \"WARN\", else: \"OK\")), estado_trafico = if(sev_tra == 2, \"CRITICO\", else: if(sev_tra == 1, \"WARN\", else: \"OK\")), estado_saturacion = if(sev_sat == 2, \"CRITICO\", else: if(sev_sat == 1, \"WARN\", else: \"OK\")) | fieldsAdd sev_max = arrayMax(array(sev_err, sev_lat, sev_tra, sev_sat)) | fieldsAdd veredicto = if(sev_max >= 2, \"NO-GO\", else: if(sev_max == 1, \"REVISAR\", else: \"GO\")) | sort sev_max desc, delta_fail_pp desc | fields veredicto, svc, estado_errores, fr_cur, fr_prev, delta_fail_pp, estado_latencia, p90_cur_ms, p90_prev_ms, delta_p90_pct, estado_trafico, reqs_cur, reqs_prev, delta_tput_pct, estado_saturacion, p99_cur_ms, p99_prev_ms, delta_p99_pct, p50_cur_ms",
       "visualization": "table",
       "visualizationSettings": {}
     },
     "2": {
-      "title": "Errores - Failure rate % (incluye periodo anterior)",
       "type": "data",
-      "query": "timeseries { f = sum(dt.service.request.failure_count), r = sum(dt.service.request.count) }, by: { dt.entity.service }, from: now() - $timeframe - $timeframe, to: now() | fieldsAdd svc = entityName(dt.entity.service) | filter in(svc, $service) | fieldsAdd failure_rate_pct = 100.0 * f[] / r[] | fields svc, failure_rate_pct, timeframe, interval",
+      "title": "Errores - Failure rate % (incluye periodo anterior)",
+      "query": "timeseries { f = sum(dt.service.request.failure_count), r = sum(dt.service.request.count) }, by: { dt.entity.service }, from: now() - $timeframe - $timeframe, to: now() | filter in(\"ALL\", $service) or in(dt.entity.service, $service) | fieldsAdd svc = entityName(dt.entity.service) | fieldsAdd failure_rate_pct = 100.0 * f[] / r[] | fields svc, failure_rate_pct, timeframe, interval",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
     "3": {
-      "title": "Latencia - p90 ms (incluye periodo anterior)",
       "type": "data",
-      "query": "timeseries { p90 = percentile(dt.service.request.response_time, 90) }, by: { dt.entity.service }, from: now() - $timeframe - $timeframe, to: now() | fieldsAdd svc = entityName(dt.entity.service) | filter in(svc, $service) | fieldsAdd p90_ms = p90[] / 1000.0 | fields svc, p90_ms, timeframe, interval",
+      "title": "Latencia - p90 ms (incluye periodo anterior)",
+      "query": "timeseries { p90 = percentile(dt.service.request.response_time, 90) }, by: { dt.entity.service }, from: now() - $timeframe - $timeframe, to: now() | filter in(\"ALL\", $service) or in(dt.entity.service, $service) | fieldsAdd svc = entityName(dt.entity.service) | fieldsAdd p90_ms = p90[] / 1000.0 | fields svc, p90_ms, timeframe, interval",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
     "4": {
-      "title": "Trafico - throughput req (incluye periodo anterior)",
       "type": "data",
-      "query": "timeseries { rpm = sum(dt.service.request.count) }, by: { dt.entity.service }, from: now() - $timeframe - $timeframe, to: now() | fieldsAdd svc = entityName(dt.entity.service) | filter in(svc, $service) | fields svc, rpm, timeframe, interval",
+      "title": "Trafico - throughput req (incluye periodo anterior)",
+      "query": "timeseries { rpm = sum(dt.service.request.count) }, by: { dt.entity.service }, from: now() - $timeframe - $timeframe, to: now() | filter in(\"ALL\", $service) or in(dt.entity.service, $service) | fieldsAdd svc = entityName(dt.entity.service) | fields svc, rpm, timeframe, interval",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
     "5": {
-      "title": "Saturacion - p99 tail latency ms (incluye periodo anterior)",
       "type": "data",
-      "query": "timeseries { p99 = percentile(dt.service.request.response_time, 99) }, by: { dt.entity.service }, from: now() - $timeframe - $timeframe, to: now() | fieldsAdd svc = entityName(dt.entity.service) | filter in(svc, $service) | fieldsAdd p99_ms = p99[] / 1000.0 | fields svc, p99_ms, timeframe, interval",
+      "title": "Saturacion - p99 tail latency ms (incluye periodo anterior)",
+      "query": "timeseries { p99 = percentile(dt.service.request.response_time, 99) }, by: { dt.entity.service }, from: now() - $timeframe - $timeframe, to: now() | filter in(\"ALL\", $service) or in(dt.entity.service, $service) | fieldsAdd svc = entityName(dt.entity.service) | fieldsAdd p99_ms = p99[] / 1000.0 | fields svc, p99_ms, timeframe, interval",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
     "6": {
-      "title": "Detalle spans - endpoints con mas errores (ventana actual)",
       "type": "data",
-      "query": "fetch spans, from: now() - $timeframe, to: now() | fieldsAdd svc = entityName(dt.entity.service) | filter in(svc, $service) | summarize { total = count(), errors = countIf(span.status_code == \"ERROR\") }, by: { svc, endpoint = span.name } | fieldsAdd error_rate_pct = if(total > 0, 100.0 * errors / total, else: 0.0) | sort errors desc | limit 50",
+      "title": "Detalle spans - endpoints por volumen y duracion (ventana actual)",
+      "query": "fetch spans, from: now() - $timeframe, to: now() | filter in(\"ALL\", $service) or in(dt.entity.service, $service) | fieldsAdd svc = entityName(dt.entity.service) | summarize { calls = count(), avg_ms = avg(duration) / 1000000.0, p90_ms = percentile(duration, 90) / 1000000.0 }, by: { svc, endpoint = span.name } | sort calls desc | limit 50",
       "visualization": "table",
       "visualizationSettings": {}
     }
@@ -96,8 +98,5 @@
     "4": { "x": 0, "y": 17, "w": 12, "h": 6 },
     "5": { "x": 12, "y": 17, "w": 12, "h": 6 },
     "6": { "x": 0, "y": 23, "w": 24, "h": 8 }
-  },
-  "importedWithCode": false,
-  "settings": {},
-  "annotations": []
+  }
 }
