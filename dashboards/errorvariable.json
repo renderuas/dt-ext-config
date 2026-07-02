@@ -1,29 +1,29 @@
 {
   "error": {
-    "message": "UNKNOWN_FUNCTION",
+    "message": "FIELD_DOES_NOT_EXIST",
     "details": {
-      "exceptionType": "DQL-SYNTAX-ERROR",
-      "errorType": "UNKNOWN_FUNCTION",
-      "errorMessage": "There's no function `arrayContains`.",
+      "exceptionType": "DQL-RESULT_TYPE",
+      "errorType": "FIELD_DOES_NOT_EXIST",
+      "errorMessage": "The field app doesn't exist.",
       "arguments": [
-        "arrayContains"
+        "app"
       ],
-      "queryString": "fetch dt.entity.service \n| fields tags \n| filter arrayContains(tags, concat(\"ENVIRONMENT:\", \"PRO\")) \n| expand tags \n| filter startsWith(tags, \"APP:\") \n| fieldsAdd app = replaceString(tags, \"APP:\", \"\") \n| filter isNotNull(app) and app != \"\" \n| summarize count(), by: { app } \n| fields value = app \n| sort value asc \n| append [ data record(value = \"ALL\") ]",
+      "queryString": "fetch dt.entity.service | fields id, tags | expand tags | filter tags == concat(\"ENVIRONMENT:\", \"DEV\") | fields id | dedup id | join [ fetch dt.entity.service | fields id, tags | expand tags | filter startsWith(tags, \"APP:\") | fieldsAdd app = replaceString(tags, \"APP:\", \"\") | fields id, app ], kind: inner, on: { id } | filter app != \"\" | fields value = app | dedup value | sort value asc",
       "errorMessageFormatSpecifierTypes": [
-        "INPUT_QUERY_PART"
+        "FIELD_NAME"
       ],
-      "errorMessageFormat": "There's no function `%1$s`.",
-      "queryId": "68c9c865-f334-4705-8cc2-ab1a24affd47",
+      "errorMessageFormat": "The field %1$s doesn't exist.",
+      "queryId": "b96fa5dd-4a2e-4bde-8cf9-5493981be2a8",
       "syntaxErrorPosition": {
         "start": {
-          "column": 10,
-          "index": 49,
-          "line": 3
+          "column": 329,
+          "index": 328,
+          "line": 1
         },
         "end": {
-          "column": 22,
-          "index": 61,
-          "line": 3
+          "column": 331,
+          "index": 330,
+          "line": 1
         }
       }
     },
